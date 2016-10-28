@@ -1,0 +1,89 @@
+# -*- coding: utf-8 -*-
+# -*- mode: org -*-
+#+TITLE: Projeto de Compiladores -- Etapa 1 (E1)
+#+AUTHOR: Rodrigo Kassick
+#+DATE: 2016-2
+#+LaTeX_CLASS: article
+#+LANGUAGE: pt
+#+LATEX_HEADER: \usepackage[margin=2cm,a4paper]{geometry}
+#+LATEX_HEADER: \usepackage[brazilian]{babel}
+#+LATEX_HEADER: \usepackage{ifxetex}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \ifxetex
+#+LATEX_HEADER:     \usepackage{tgtermes}
+#+LATEX_HEADER: \else
+#+LATEX_HEADER:     \usepackage[utf-8]{inputenc}
+#+LATEX_HEADER:     \usepackage{times}              % pacote para usar fonte Adobe Times
+#+LATEX_HEADER:     \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \fi
+#+LATEX_HEADER: \usepackage{multicol}
+#+TAGS: noexport(n) deprecated(d) success(s) failed(f) pending(p)
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+SEQ_TODO: TODO(t!) STARTED(s!) WAITING(w!) REVIEW(r!) PENDING(p!) | DONE(d!) CANCELLED(c!) DEFERRED(f!)
+#+STARTUP: overview indent
+#+OPTIONS: ^:nil
+#+OPTIONS: _:nil
+#+OPTIONS: num:t toc:nil
+
+* Descrição
+
+Utilizar uma ferramenta de geração de /scanners/. Os padrões reconhecidos pelo /scanner/ gerado serão números (inteiros e reais, em decimal, binário e hexadecimal).
+
+O programa desenvolvido deverá ler da entrada padrão (/stdin/) e apresentar na saída padrão cada um dos /tokens/ reconhecidos.
+
+Ao final do trabalho, o aluno deverá conhecer o funcionamento da ferramenta de geração de analisador léxico utilizada (ANTLR, FLEX, etc.)
+
+* Tokens
+
+Os seguintes tokens devem ser reconhecidos:
+- Números inteiros em representação decimal (e.g. /1/ , /0/ , /000001/ , /100023412/ , /-2031/ , /-1/ , ... )
+- Números reais em representação decimal, com ou sem expoente (e.g. /1.0/ , /0.00009/ , /-1.2/ , /-123.50E10/ , /123.50e-10/ , /123.40E+10/ , etc.)
+- Números inteiros positivos em representação binária (e.g. /0b/ , /1b/, /01111b/, /1001b/, /11111111111b/ , etc.). O símbolo "b" faz parte do /token/ para que possamos diferenciar entre números decimais e números binários (111  vs 111b).
+- Números inteiros positivos em representação hexadecimal (e.g. /0x123/ , /0xA10F/ , /0x90baF/ , /0xA/ , /0xF/ , /0x0/ , /0x1/ , ...)
+
+* Exemplo de Entrada / Saída esperada
+
+#+BEGIN_LaTeX
+\begin{multicols}{2}
+{\bf Entrada:}
+\begin{verbatim}
+1
+1b
+-2
+0xaf
+-1.0
+1.90e+10
+\end{verbatim}
+
+{\bf Saída:}
+\begin{verbatim}
+INTEIRO DECIMAL: 1
+INTEIRO BINÁRIO: 1b
+INTEIRO DECIMAL: -2
+INTEIRO HEXADECIMAL: 0xaf
+REAL DECIMAL: -1.0
+REAL DECIMAL: 1.90e+10
+\end{verbatim}
+\end{multicols}
+#+END_LaTeX
+
+*Dica:* Para encerrar a entrada ao executar, use ~Ctrl-D <enter>~ (Linux e OSX) ou ~Ctrl-Z <enter>~ (Windows)
+
+* Dicas
+
+Veja o arquivo =E1 -- Skel.zip= para um exemplo de gramática em ANTLR e um exemplo de código que reconhece números binários. O projeto está configurado com /ant/ para compilação. Os seguintes alvos estão disponíveis:
+- =generate= : Gera o /scanner/ a partir do arquivo de entrada (=src/Numbers.g4=)
+- =compile= : Compila o projeto
+- =run= : executa o método main da classe Numbers (=src/Numbers.java=)
+
+Importe o arquivo =build.xml= ao criar o novo projeto no Eclipse (Create new project from existing Ant Build File). Pode ser necessário alterar o /builder/ do projeto para um /Ant Builder/ e selecionar o arquivo =build.xml= para que a IDE faça a geração do scanner automaticamente.
+
+A ferramenta ANTLR pode gerar código para a linguagem C# . Adicione ao arquivo ~Numbers.g4~ o seguinte código ao arquivo =Numbers.g4= , logo após a linha =gramar Numbers;=:
+#+BEGIN_SRC antlr :eval never :exports code
+options {
+   language=CSharp;
+}
+#+END_SRC
+
+Para mais informações de como integrar a ferramenta ANTLR com o VisualStudio, consulte o site [[https://github.com/tunnelvisionlabs/antlr4cs]]
