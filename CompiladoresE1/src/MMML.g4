@@ -9,7 +9,7 @@ import java.util.*;
 }*/
 
 /*
-Programa: Declarações de funções e uma função main SEMPRE
+Programa: Declaracoes de funcoes e uma funcao main SEMPRE
 
 def fun x = x + 1
 
@@ -18,6 +18,8 @@ def main =
   in
      print concat "Resultado" (string (fun x))
 */
+
+@parser::members{int erros=0;}
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
     ;
@@ -38,7 +40,7 @@ maindecl: 'def' 'main' '=' funcbody                  #programmain_rule
 
 fdecl: 'def' functionname fdeclparams '=' funcbody   #funcdef_rule
         /*{
-            System.Console.WriteLine("Achou declaração: {0} com {1}", $functionname.text, $fdeclparams.plist.ToString());
+            System.Console.WriteLine("Achou declaracao: {0} com {1}", $functionname.text, $fdeclparams.plist.ToString());
         }*/
     ;
 
@@ -130,7 +132,7 @@ funcbody:
 												     }else if(m.eType == Type.Integer){
 														System.out.println("Expressao inteira");
 													 }else{
-														System.out.println("Erro");
+														System.out.println("Foram encontrados "+erros+"erros na expressao");
 													 }}#fbody_expr_rule
     ;
 
@@ -162,33 +164,28 @@ returns [Type eType]
     : '(' e=funcbody ')'                             #me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG symbol                                 {eType = Type.Bool;}     #me_boolneg_rule        // Negate a variable
-    | TOK_NEG '(' funcbody ')'                       {eType = Type.Bool;}#me_boolnegparens_rule  //       or anything in between ( )
-    | l=metaexpr TOK_POWER r=metaexpr                {if(l.eType == Type.Float || r.eType==Type.Float){
+    | TOK_NEG '(' funcbody ')'                       {eType = Type.Bool;}     #me_boolnegparens_rule  //       or anything in between ( )
+    | l=metaexpr TOK_POWER r=metaexpr                {if(l.eType != Type.String && r.eType!=Type.String){
 														eType = Type.Float;
 													  }else{
-														if(l.eType==Type.Integer && r.eType=Type.Integer){
-															eType = Type.Integer;
-														}else{
-															eType = null;
-														}
+													  		erros++;
+	    													eType = null;
 													   }
 													  }   #me_exprpower_rule      // Exponentiation
 													  
     | l=metaexpr TOK_CONCAT r=metaexpr                {if(l.eType == Type.String || r.eType==Type.String){
 														eType = Type.String;
 													  }else{
+														erros++;
 														eType = null;
 													  }
 													 }#me_listconcat_rule     // Sequence concatenation
 													 
-    | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if(l.eType == Type.Float || r.eType==Type.Float){
+    | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if(l.eType != Type.String && r.eType!=Type.String){
 														eType = Type.Float;
 													  }else{
-														if(l.eType==Type.Integer && r.eType=Type.Integer){
-															eType = Type.Integer;
-														}else{
-															eType = null;
-														}
+													    erros++;
+													    eType = null;
 													  }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 													 
@@ -198,12 +195,14 @@ returns [Type eType]
 														if(l.eType==Type.Integer && r.eType=Type.Integer){
 															eType = Type.Integer;
 														}else{
+															erros++;
 															eType = null;
 														}
 													  }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 													 
     | l=metaexpr TOK_CMP_GT_LT r=metaexpr            {if((l.eType != r.eType) && (l.eType==Type.String || r.eType==Type.String)){
+    													erros++;
 														eType = null;
 													  }else{
 														eType = Type.Boolean;
@@ -211,6 +210,7 @@ returns [Type eType]
 													 }#me_boolgtlt_rule       // < <= >= > are equal
 													 
     | l=metaexpr TOK_CMP_EQ_DIFF r=metaexpr          {if((l.eType != r.eType) && (l.eType==Type.String || r.eType==Type.String)){
+    													erros++;
 														eType = null;
 													  }else{
 														eType = Type.Boolean;
@@ -218,6 +218,7 @@ returns [Type eType]
 													 }#me_booleqdiff_rule     // == and != are egual
 													 
     | l=metaexpr TOK_BOOL_AND_OR r=metaexpr         {if((l.eType != r.eType) && (l.eType==Type.String || r.eType==Type.String)){
+    													erros++;
 														eType = null;
 													  }else{
 														eType = Type.Boolean;
