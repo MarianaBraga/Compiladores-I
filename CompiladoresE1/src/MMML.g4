@@ -19,7 +19,7 @@ def main =
      print concat "Resultado" (string (fun x))
 */
 
-@parser::members{int erros=0;}
+@parser::members{int erros=0; int cont=0;}
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
     ;
@@ -88,8 +88,8 @@ functionname: TOK_ID                                 #fdecl_funcname_rule
     ;
 
 type
-returns [Type tType]:
-        b=basic_type                                   {tType = b.cType;}#basictype_rule
+returns [String tType]:
+        b=basic_type                                   {$tType = $b.cType;}#basictype_rule
     |   sequence_type
         {
             System.out.println("Variavel do tipo " + $sequence_type.base + " dimensao "+ $sequence_type.dimension);
@@ -98,11 +98,11 @@ returns [Type tType]:
     ;
 
 basic_type
-returns [Type cType]
-    : 'int'     {cType = Type.Integer;}
-    | 'bool'    {cType = Type.Boolean;}
-    | 'str'     {cType = Type.String;}
-    | 'float'   {cType = Type.Float;}
+returns [String cType]
+    : 'int'     {$cType = "integer";}
+    | 'bool'    {$cType = "boolean";}
+    | 'str'     {$cType = "string";}
+    | 'float'   {$cType = "float";}
     ;
 
 sequence_type
@@ -122,17 +122,19 @@ returns [int dimension=0, String base]
                                                      #sequencetype_sequence_rule
     ;
 
-funcbody:
+funcbody
+returns [String oType]:
         ifexpr                                       #fbody_if_rule
     |   letexpr                                      #fbody_let_rule
-    |   m=metaexpr                                     {if(m.eType==Type.Boolean){
-														System.out.prinln("Expressao booleana");
-													 }else if(m.eType==Type.Float){
+    |   m=metaexpr                                   {$oType = $m.eType;
+    												 if($m.eType.equals("boolean")){
+														System.out.println("Expressao booleana");
+													 }else if($m.eType.equals("float")){
 														System.out.println("Expressao float");
-												     }else if(m.eType == Type.Integer){
+												     }else if($m.eType.equals("integer")){
 														System.out.println("Expressao inteira");
 													 }else{
-														System.out.println("Foram encontrados "+erros+"erros na expressao");
+														System.out.println("Foram encontrados "+erros+" erros na expressao");
 													 }}#fbody_expr_rule
     ;
 
@@ -160,75 +162,57 @@ letvarexpr
     ;
 
 metaexpr
-returns [Type eType]
-    : '(' e=funcbody ')'                             #me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
+returns [String eType]
+    : '(' o=funcbody ')'                             {$eType = $o.oType;}#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
-    | TOK_NEG symbol                                 {eType = Type.Bool;}     #me_boolneg_rule        // Negate a variable
-    | TOK_NEG '(' funcbody ')'                       {eType = Type.Bool;}     #me_boolnegparens_rule  //       or anything in between ( )
-    | l=metaexpr TOK_POWER r=metaexpr                {if(l.eType != Type.String && r.eType!=Type.String){
-														eType = Type.Float;
+    | TOK_NEG symbol                                 {$eType = "boolean";}     #me_boolneg_rule        // Negate a variable
+    | TOK_NEG '(' funcbody ')'                       {$eType = "boolean";}     #me_boolnegparens_rule  //       or anything in between ( )
+    | l=metaexpr TOK_POWER r=metaexpr                {if(!$l.eType.equals("string") && !$r.eType.equals("string")){
+														$eType = "float";
 													  }else{
 													  		erros++;
-	    													eType = null;
+	    													$eType = null;
 													   }
 													  }   #me_exprpower_rule      // Exponentiation
-													  
-    | l=metaexpr TOK_CONCAT r=metaexpr                {if(l.eType == Type.String || r.eType==Type.String){
-														eType = Type.String;
+
+    | l=metaexpr TOK_CONCAT r=metaexpr                {if($l.eType.equals("string") || $r.eType.equals("string")){
+														$eType = "string";
 													  }else{
 														erros++;
-														eType = null;
+														$eType = null;
 													  }
 													 }#me_listconcat_rule     // Sequence concatenation
-													 
-    | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if(l.eType != Type.String && r.eType!=Type.String){
-														eType = Type.Float;
+
+    | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if(!$l.eType.equals("string") && !$r.eType.equals("string")){
+														$eType = "float";
 													  }else{
 													    erros++;
-													    eType = null;
+													    $eType = null;
 													  }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
-													 
-    | l=metaexpr TOK_PLUS_OR_MINUS r=metaexpr        {if(l.eType == Type.Float || r.eType==Type.Float){
-														eType = Type.Float;
+
+    | l=metaexpr TOK_PLUS_OR_MINUS r=metaexpr        {if($l.eType.equals("float") || $r.eType.equals("float")){
+														$eType = "float";
 													  }else{
-														if(l.eType==Type.Integer && r.eType=Type.Integer){
-															eType = Type.Integer;
+														if($l.eType.equals("integer") && $r.eType.equals("integer")){
+															$eType = "integer";
 														}else{
 															erros++;
-															eType = null;
+															$eType = null;
 														}
 													  }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
-													 
-    | l=metaexpr TOK_CMP_GT_LT r=metaexpr            {if((l.eType != r.eType) && (l.eType==Type.String || r.eType==Type.String)){
-    													erros++;
-														eType = null;
-													  }else{
-														eType = Type.Boolean;
-													  }
-													 }#me_boolgtlt_rule       // < <= >= > are equal
-													 
-    | l=metaexpr TOK_CMP_EQ_DIFF r=metaexpr          {if((l.eType != r.eType) && (l.eType==Type.String || r.eType==Type.String)){
-    													erros++;
-														eType = null;
-													  }else{
-														eType = Type.Boolean;
-													  }
-													 }#me_booleqdiff_rule     // == and != are egual
-													 
-    | l=metaexpr TOK_BOOL_AND_OR r=metaexpr         {if((l.eType != r.eType) && (l.eType==Type.String || r.eType==Type.String)){
-    													erros++;
-														eType = null;
-													  }else{
-														eType = Type.Boolean;
-													  }
-													 }#me_boolandor_rule      // &&   and  ||  are equal
-													 
+
+    | l=metaexpr TOK_CMP_GT_LT r=metaexpr            {$eType = "boolean";}#me_boolgtlt_rule       // < <= >= > are equal
+
+    | l=metaexpr TOK_CMP_EQ_DIFF r=metaexpr          {$eType = "boolean"; }#me_booleqdiff_rule     // == and != are egual
+
+    | l=metaexpr TOK_BOOL_AND_OR r=metaexpr         {$eType = "boolean";}#me_boolandor_rule      // &&   and  ||  are equal
+
     | symbol                                         #me_exprsymbol_rule     // a single symbol
-    | literal                                        #me_exprliteral_rule    // literal value
+    | y=literal                                      {$eType = $y.lType;}#me_exprliteral_rule    // literal value
     | funcall                                        #me_exprfuncall_rule    // a funcion call
-    | cast                                           {eType = cType;}#me_exprcast_rule       // cast a type to other  
+    | t=cast                                         {$eType = $t.cType;}#me_exprcast_rule       // cast a type to other
     ;
 
 sequence_expr
@@ -242,8 +226,8 @@ funcall: symbol funcall_params                       #funcall_rule
     ;
 
 cast
-returns [Type cType]
-    : t=type funcbody                                  {cType = t.tType;}#cast_rule
+returns [String cType]
+    : t=type funcbody                                  {$cType = $t.tType;}#cast_rule
     ;
 
 funcall_params
@@ -256,12 +240,13 @@ funcall_params_cont
     |                                                   #funcall_params_end_rule
     ;
 
-literal:
-        'nil'                                           #literalnil_rule
-    |   'true'                                          #literaltrue_rule
-    |   number                                          #literalnumber_rule
-    |   strlit                                          #literalstring_rule
-    |   charlit                                         #literal_char_rule
+literal
+returns [String lType]:
+        'nil'                                           {$lType = "boolean";} #literalnil_rule
+    |   'true'                                          {$lType = "boolean";} #literaltrue_rule
+    |   n=number                                        {$lType = $n.cType;} #literalnumber_rule
+    |   strlit                                          {$lType = "string";} #literalstring_rule
+    |   charlit                                         {$lType = "string";} #literal_char_rule
     ;
 
 strlit: TOK_STR_LIT
@@ -272,11 +257,11 @@ charlit
     ;
 
 number
-returns [Type cType]:
-        FLOAT                                           {cType = Type.Float;}#numberfloat_rule
-    |   DECIMAL                                         {cType = Type.Float;}#numberdecimal_rule
-    |   HEXADECIMAL                                     {cType = Type.Integer;}#numberhexadecimal_rule
-    |   BINARY                                          {cType = Type.Integer;}#numberbinary_rule
+returns [String cType]:
+        FLOAT                                           {$cType = "float";}#numberfloat_rule
+    |   DECIMAL                                         {$cType = "float";}#numberdecimal_rule
+    |   HEXADECIMAL                                     {$cType = "integer";}#numberhexadecimal_rule
+    |   BINARY                                          {$cType = "integer";}#numberbinary_rule
                 ;
 
 symbol: TOK_ID                                          #symbol_rule
