@@ -2,6 +2,7 @@ grammar MMML;
 
 @header {
 import java.util.*;
+import java.util.ArrayList;
 }
 
 /*options {
@@ -19,7 +20,12 @@ def main =
      print concat "Resultado" (string (fun x))
 */
 
-@parser::members{int erros=0; int cont=0;}
+@parser::members{
+
+int erros=0;
+//inicializar a tabela de simbolos
+//criar ponteiro para a tabela atual
+}
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
     ;
@@ -127,12 +133,16 @@ returns [String oType]:
         ifexpr                                       #fbody_if_rule
     |   letexpr                                      #fbody_let_rule
     |   m=metaexpr                                   {$oType = $m.eType;
-    												 if($m.eType.equals("boolean")){
+    												 if($m.eType == null){
+    												 	System.out.println("Foram encontrados "+erros+" erros na expressao");
+    												 }else if($m.eType.equals("boolean")){
 														System.out.println("Expressao booleana");
 													 }else if($m.eType.equals("float")){
 														System.out.println("Expressao float");
 												     }else if($m.eType.equals("integer")){
 														System.out.println("Expressao inteira");
+													 }else if($m.eType.equals("char")){
+													 	System.out.println("Expressao booleana");
 													 }else{
 														System.out.println("Foram encontrados "+erros+" erros na expressao");
 													 }}#fbody_expr_rule
@@ -167,15 +177,15 @@ returns [String eType]
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG symbol                                 {$eType = "boolean";}     #me_boolneg_rule        // Negate a variable
     | TOK_NEG '(' funcbody ')'                       {$eType = "boolean";}     #me_boolnegparens_rule  //       or anything in between ( )
-    | l=metaexpr TOK_POWER r=metaexpr                {if(!$l.eType.equals("string") && !$r.eType.equals("string")){
-														$eType = "float";
+    | l=metaexpr TOK_POWER r=metaexpr                {if((!$l.eType.equals("string") && !$r.eType.equals("string")) && (!$l.eType.equals("boolean") && !$r.eType.equals("boolean"))){
+															$eType = "float";
 													  }else{
 													  		erros++;
 	    													$eType = null;
 													   }
 													  }   #me_exprpower_rule      // Exponentiation
 
-    | l=metaexpr TOK_CONCAT r=metaexpr                {if($l.eType.equals("string") || $r.eType.equals("string")){
+    | l=metaexpr TOK_CONCAT r=metaexpr                {if($l.eType.equals("string") && $r.eType.equals("string")){
 														$eType = "string";
 													  }else{
 														erros++;
@@ -183,23 +193,27 @@ returns [String eType]
 													  }
 													 }#me_listconcat_rule     // Sequence concatenation
 
-    | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if(!$l.eType.equals("string") && !$r.eType.equals("string")){
-														$eType = "float";
+    | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if((!$l.eType.equals("string") && !$r.eType.equals("string")) && (!$l.eType.equals("boolean") && !$r.eType.equals("boolean"))){
+														if($l.eType.equals("float") || $r.eType.equals("float")){
+															$eType = "float";
+														}else{
+															$eType = "integer";
+														}
 													  }else{
 													    erros++;
 													    $eType = null;
 													  }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 
-    | l=metaexpr TOK_PLUS_OR_MINUS r=metaexpr        {if($l.eType.equals("float") || $r.eType.equals("float")){
-														$eType = "float";
-													  }else{
-														if($l.eType.equals("integer") && $r.eType.equals("integer")){
-															$eType = "integer";
+    | l=metaexpr TOK_PLUS_OR_MINUS r=metaexpr        {if((!$l.eType.equals("string") && !$r.eType.equals("string")) && (!$l.eType.equals("boolean") && !$r.eType.equals("boolean"))){
+														if($l.eType.equals("float") || $r.eType.equals("float")){
+															$eType = "float";
 														}else{
-															erros++;
-															$eType = null;
+															$eType = "integer";
 														}
+													  }else{
+													    erros++;
+													    $eType = null;
 													  }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 
@@ -209,7 +223,7 @@ returns [String eType]
 
     | l=metaexpr TOK_BOOL_AND_OR r=metaexpr         {$eType = "boolean";}#me_boolandor_rule      // &&   and  ||  are equal
 
-    | symbol                                         #me_exprsymbol_rule     // a single symbol
+    | u=symbol                                      {$eType = $u.sType;}  #me_exprsymbol_rule     // a single symbol
     | y=literal                                      {$eType = $y.lType;}#me_exprliteral_rule    // literal value
     | funcall                                        #me_exprfuncall_rule    // a funcion call
     | t=cast                                         {$eType = $t.cType;}#me_exprcast_rule       // cast a type to other
@@ -246,7 +260,7 @@ returns [String lType]:
     |   'true'                                          {$lType = "boolean";} #literaltrue_rule
     |   n=number                                        {$lType = $n.cType;} #literalnumber_rule
     |   strlit                                          {$lType = "string";} #literalstring_rule
-    |   charlit                                         {$lType = "string";} #literal_char_rule
+    |   charlit                                         {$lType = "char";} #literal_char_rule
     ;
 
 strlit: TOK_STR_LIT
@@ -259,12 +273,15 @@ charlit
 number
 returns [String cType]:
         FLOAT                                           {$cType = "float";}#numberfloat_rule
-    |   DECIMAL                                         {$cType = "float";}#numberdecimal_rule
+    |   DECIMAL                                         {$cType = "integer";}#numberdecimal_rule
     |   HEXADECIMAL                                     {$cType = "integer";}#numberhexadecimal_rule
     |   BINARY                                          {$cType = "integer";}#numberbinary_rule
                 ;
 
-symbol: TOK_ID                                          #symbol_rule
+symbol
+returns [String sType]
+: y=TOK_ID                                        { $sType = null;
+												    }#symbol_rule
     ;
 
 
