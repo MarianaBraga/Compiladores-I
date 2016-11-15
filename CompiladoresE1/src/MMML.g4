@@ -23,8 +23,8 @@ def main =
 @parser::members{
 
 int erros=0;
-//inicializar a tabela de simbolos
-//criar ponteiro para a tabela atual
+NestedSymbolTable<String> main;
+NestedSymbolTable<String> currentTable;
 }
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
@@ -153,7 +153,8 @@ ifexpr
     ;
 
 letexpr
-    : 'let' letlist 'in' funcbody                    #letexpression_rule
+    : {main = new NestedSymbolTable<String>(current);}
+    	'let' letlist 'in' funcbody                    {current = main;}#letexpression_rule
     ;
 
 letlist
@@ -166,9 +167,9 @@ letlist_cont
     ;
 
 letvarexpr
-    :    symbol '=' funcbody                         #letvarattr_rule
-    |    '_'    '=' funcbody                         #letvarresult_ignore_rule
-    |    symbol '::' symbol '=' funcbody             #letunpack_rule
+    :    s=symbol '=' f=funcbody                         {main.store($s.getText(),$f.oType);}#letvarattr_rule
+    |    '_'    '=' f=funcbody                           {main.store("_",$f.oType);}#letvarresult_ignore_rule
+    |    l=symbol '::' r=symbol '=' s=funcbody           {main.store($l.getText()+$r.getText(),$s.oType);}  #letunpack_rule
     ;
 
 metaexpr
