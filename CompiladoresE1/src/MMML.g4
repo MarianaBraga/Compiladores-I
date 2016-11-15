@@ -133,7 +133,7 @@ returns [String oType]:
         ifexpr                                       #fbody_if_rule
     |   letexpr                                      #fbody_let_rule
     |   m=metaexpr                                   {$oType = $m.eType;
-    												 if($m.eType == null){
+    												 /*if($m.eType == null){
     												 	System.out.println("Foram encontrados "+erros+" erros na expressao");
     												 }else if($m.eType.equals("boolean")){
 														System.out.println("Expressao booleana");
@@ -145,7 +145,7 @@ returns [String oType]:
 													 	System.out.println("Expressao booleana");
 													 }else{
 														System.out.println("Foram encontrados "+erros+" erros na expressao");
-													 }}#fbody_expr_rule
+													 }*/}#fbody_expr_rule
     ;
 
 ifexpr
@@ -153,8 +153,9 @@ ifexpr
     ;
 
 letexpr
-    : {main = new NestedSymbolTable<String>(current);}
-    	'let' letlist 'in' funcbody                    {current = main;}#letexpression_rule
+    : {main = new NestedSymbolTable<String>(currentTable);
+       currentTable = main;}
+    	'let' letlist 'in' funcbody                    {currentTable = main;}#letexpression_rule
     ;
 
 letlist
@@ -167,9 +168,9 @@ letlist_cont
     ;
 
 letvarexpr
-    :    s=symbol '=' f=funcbody                         {main.store($s.getText(),$f.oType);}#letvarattr_rule
+    :    s=symbol '=' f=funcbody                         {main.store($s.text,$f.oType);}#letvarattr_rule
     |    '_'    '=' f=funcbody                           {main.store("_",$f.oType);}#letvarresult_ignore_rule
-    |    l=symbol '::' r=symbol '=' s=funcbody           {main.store($l.getText()+$r.getText(),$s.oType);}  #letunpack_rule
+    |    l=symbol '::' r=symbol '=' s=funcbody           {main.store($l.text+$r.text,$s.oType);}  #letunpack_rule
     ;
 
 metaexpr
@@ -281,8 +282,15 @@ returns [String cType]:
 
 symbol
 returns [String sType]
-: y=TOK_ID                                        { $sType = null;
-												    }#symbol_rule
+: y=TOK_ID                                        {$sType = null;
+													System.out.println("searching for: "+$y.text);
+													//fazer a pesquisa
+													System.out.println("Tabela atual:");
+													int i=1;
+													for (SymbolEntry<String> entry : main.getEntries()) {
+            											System.out.println(i+"- main Entry: " + entry);
+            											i++;
+            									  }}#symbol_rule
     ;
 
 
