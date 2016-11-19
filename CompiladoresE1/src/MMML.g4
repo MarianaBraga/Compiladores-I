@@ -23,8 +23,9 @@ def main =
 @parser::members{
 
 int erros=0;
-NestedSymbolTable<String> main;
-NestedSymbolTable<String> currentTable;
+//inicializando a tabela com os simbolos pre-definidos na E4
+NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>().voidStore("f","float").voidStore("i","integer").voidStore("c","char").voidStore("s","string").voidStore("b","boolean");
+
 }
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
@@ -54,6 +55,11 @@ fdeclparams
 returns [List<String> plist]
 @init {
     $plist = new ArrayList<String>();
+    symbolTable.store("f","float");
+	symbolTable.store("i","integer");
+	symbolTable.store("c","char");
+	symbolTable.store("s","string");
+	symbolTable.store("b","boolean");
 }
 @after {
     for (String s : $plist) {
@@ -153,9 +159,10 @@ ifexpr
     ;
 
 letexpr
-    : {main = new NestedSymbolTable<String>(currentTable);
-       currentTable = main;}
-    	'let' letlist 'in' funcbody                    {currentTable = main;}#letexpression_rule
+    : {symbolTable = new NestedSymbolTable<String>(symbolTable);}
+    	'let' letlist 'in' funcbody                    {if(symbolTable.getParent()!=null){
+    														System.out.println("voltando para a tabela pai");
+    														symbolTable = symbolTable.getParent();}}#letexpression_rule
     ;
 
 letlist
@@ -168,9 +175,9 @@ letlist_cont
     ;
 
 letvarexpr
-    :    s=symbol '=' f=funcbody                         {main.store($s.text,$f.oType);}#letvarattr_rule
-    |    '_'    '=' f=funcbody                           {main.store("_",$f.oType);}#letvarresult_ignore_rule
-    |    l=symbol '::' r=symbol '=' s=funcbody           {main.store($l.text+$r.text,$s.oType);}  #letunpack_rule
+    :    s=symbol '=' f=funcbody                         {symbolTable.store($s.text,$f.oType);System.out.print("simbolo "+$s.text+" armazenado na tabela atual");if($f.oType==null){System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");}else{System.out.println("");}}#letvarattr_rule
+    |    '_'    '=' f=funcbody                           {symbolTable.store("_",$f.oType);System.out.print("simbolo _ armazenado na tabela atual");if($f.oType==null){System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");}else{System.out.println("");}}#letvarresult_ignore_rule
+    |    l=symbol '::' r=symbol '=' s=funcbody           {symbolTable.store($l.text+$r.text,$s.oType);System.out.print("simbolo "+$l.text+$r.text+" armazenado na tabela atual");if($s.oType==null){System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");}else{System.out.println("");}}  #letunpack_rule
     ;
 
 metaexpr
@@ -283,14 +290,20 @@ returns [String cType]:
 symbol
 returns [String sType]
 : y=TOK_ID                                        {$sType = null;
-													System.out.println("searching for: "+$y.text);
-													//fazer a pesquisa
+													System.out.println("simbolo detectado, procurando por: "+$y.text);
+													SymbolEntry s = symbolTable.lookup($y.text);
+													if(s==null){
+														System.out.println("#nao encontrado#");
+													}else{
+														System.out.println("#encontrado - "+s+"#");
+														$sType = s.symbol.toString();
+													}
 													System.out.println("Tabela atual:");
 													int i=1;
-													for (SymbolEntry<String> entry : main.getEntries()) {
-            											System.out.println(i+"- main Entry: " + entry);
+													for (SymbolEntry<String> entry : symbolTable.getEntries()) {
+            											System.out.println("	"+i+"- main Entry: " + entry);
             											i++;
-            									  }}#symbol_rule
+	            									 }if(symbolTable.getCount()==0){System.out.println("*****nenhum simbolo azmazenado******");}else{/*System.out.println("**************************************");*/}}#symbol_rule
     ;
 
 

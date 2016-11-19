@@ -14,7 +14,7 @@ import java.util.*;
         public String toString() {
             return "Entry at " + offset +
                     ", size " + size +
-                    "value: " + symbol;
+                    " value: " + symbol;
         }
     }
 
@@ -224,5 +224,17 @@ import java.util.*;
                 }
                 return offset;
             }
+        }
+        
+        public NestedSymbolTable<T> voidStore(String name, T symbol) {
+            int symbolOffset = this.nextOffset;
+            if (!storage.containsKey(name))
+                this.entriesCount++;
+            this.size += 1;
+            this.nextOffset += 1;
+
+            storage.put(name, new SymbolEntry<T>(symbol, symbolOffset, 1));
+
+            return this;
         }
     }
