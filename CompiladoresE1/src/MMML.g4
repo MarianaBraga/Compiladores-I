@@ -165,11 +165,12 @@ letexpr
     {symbolTable = new NestedSymbolTable<String>(symbolTable);
        symbolValueTable = new NestedSymbolTable<Object>(symbolValueTable);
     }
-    	'let' d = letlist 						{ for (int i=$d.names.size(); i<2; i--) {
-    												symbolTable.store($d.names.remove($d.names.size()-1), $a.oType); 
-    											  }
-    											}
-    	'in' a = funcbody                    {	$letexprType = $a.oType;
+    	'let' d = letlist 'in' a = funcbody               {	for (int i=$d.names.size(); i<=1; i--) {
+			    												System.out.println("letexpr -> entrou no for de names" + names);
+			    												symbolTable.store($d.names.remove($d.names.size()-1), $a.oType); 
+			    												System.out.println("Adicionou na tabela de tipos os names");
+			    											  }
+    														$letexprType = $a.oType;
     														System.out.println("voltando para a tabela pai");
     														symbolTable = symbolTable.getParent();
     														symbolValueTable = symbolValueTable.getParent();}#letexpression_rule
@@ -177,42 +178,31 @@ letexpr
 
 letlist
 	returns [List<String> names]:
-     c=letvarexpr 								{ for (int i=$c.name1.size(); i<2; i--) {
-     												$names.add($c.name1.remove($c.name1.size()-1)); 
-     											  }
-     											} 
-     e=letlist_cont 						 	{ for (int i=$e.name2.size(); i<2; i--) {
-     												$names.add($e.name2.remove($e.name2.size()-1)); 
-     											  }
-     											}                      #letlist_rule
+     c=letvarexpr 								{ $names.add($c.name1); System.out.println("names.add"); } 
+     e=letlist_cont 						 	{ $names.add($e.name2); System.out.println("names.add"); }                      #letlist_rule
     ;
 
 letlist_cont
-    returns [List<String> name2]:
-     ',' b=letvarexpr 							{ for (int i=$b.name1.size(); i<2; i--) {
-     												$name2.add($b.name1.remove($b.name1.size()-1)); 
-     											  }	
-     											} 
-     letlist_cont                     				#letlist_cont_rule
+    returns [String name2]:
+     ',' b=letvarexpr                           { $name2 = $b.name1; System.out.println("name2 recebe name1"); }
+      letlist_cont                                   #letlist_cont_rule
     |                                                #letlist_cont_end
     ;
 
 letvarexpr
-	returns [String letType, List<String> name1]:
-         s=symbol 								{  $name1.add($s.text); }
+	returns [String letType, String name1]:
+         s=symbol 								{  $name1 = $s.text; values.add($s.text); System.out.println("values-->" + values); }
          '=' f=funcbody                         {  $letType = $f.oType;
 	         												if ($s.text != ""){
-	         													symbolTable.store($s.text,$f.oType);
-	         													if (values.size() == 0){ Object obj1 = values.remove(values.size()); symbolValueTable.store($s.text, obj1); }
-	         													else { Object obj1 = values.remove(values.size()-1); symbolValueTable.store($s.text, obj1); }
+	         													symbolTable.store($s.text,$f.oType); System.out.println("Adicionou na tabela de tipos");
+	         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); System.out.println("removeu da pilha, adicionou na tabela de valores"); symbolValueTable.store($s.text, obj1); }
 	         													System.out.print("simbolo "+$s.text+" armazenado na tabela atual");
 	         													if($f.oType==null){
 	         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
 	         													}else{System.out.println("");}}}#letvarattr_rule
     |    '_'    '=' f=funcbody                           {	$letType = $f.oType;
     															symbolTable.store("_",$f.oType);
-    															if (values.size() == 0){ Object obj2 = values.remove(values.size()); symbolValueTable.store("_", obj2); }
-	         													else { Object obj2 = values.remove(values.size()-1); symbolValueTable.store("_", obj2); }
+    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); symbolValueTable.store("_", obj2); }
     															System.out.print("simbolo _ armazenado na tabela atual");
     															if($f.oType==null){
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -220,8 +210,7 @@ letvarexpr
     |    l=symbol '::' r=symbol '=' s=funcbody           {	$letType = $s.oType;
     														if ($l.text != "" && $r.text != ""){
     															symbolTable.store($l.text+$r.text,$s.oType);
-    															if (values.size() == 0){ Object obj3 = values.remove(values.size()); symbolValueTable.store($l.text+$r.text, obj3); }
-	         													else { Object obj3 = values.remove(values.size()-1); symbolValueTable.store($l.text+$r.text, obj3); }
+    															if (values.size() != 0){ Object obj3 = values.remove(0); symbolValueTable.store($l.text+$r.text, obj3); }
     															System.out.print("simbolo "+$l.text+$r.text+" armazenado na tabela atual");
     															if($s.oType==null){	
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -252,10 +241,6 @@ returns [String eType]
 														 Integer v1c = (Integer)( values.remove(values.size()-1) );
 													     Integer v2c = (Integer)( values.remove(values.size()-1) );
 													     values.add(new Integer(v1c.intValue() + v2c.intValue()));
-												     } else {
-												     	Integer v1c = (Integer)( values.remove(values.size()) );
-												     	Integer v2c = (Integer)( values.remove(values.size()) );
-												     	values.add(new Integer(v1c.intValue() + v2c.intValue()));
 												     }
 													 }#me_listconcat_rule     // Sequence concatenation
 
@@ -273,10 +258,6 @@ returns [String eType]
 														 Integer v1dm = (Integer)( values.remove(values.size()-1) );
 													     Integer v2dm = (Integer)( values.remove(values.size()-1) );
 													     values.add(new Integer(v1dm.intValue() + v2dm.intValue()));
-												     } else {
-												     	Integer v1dm = (Integer)( values.remove(values.size()) );
-												     	Integer v2dm = (Integer)( values.remove(values.size()) );
-												     	values.add(new Integer(v1dm.intValue() + v2dm.intValue()));
 												     }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 
@@ -294,10 +275,6 @@ returns [String eType]
 														 Integer v1mm = (Integer)( values.remove(values.size()-1) );
 													     Integer v2mm = (Integer)( values.remove(values.size()-1) );
 													     values.add(new Integer(v1mm.intValue() + v2mm.intValue()));
-												     } else {
-												     	Integer v1mm = (Integer)( values.remove(values.size()) );
-												     	Integer v2mm = (Integer)( values.remove(values.size()) );
-												     	values.add(new Integer(v1mm.intValue() + v2mm.intValue()));
 												     }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 
@@ -309,6 +286,7 @@ returns [String eType]
 
     | u=symbol                                      {
     													$eType = $u.sType;
+    													System.out.println("1-entrei em symbol");
     													SymbolEntry<Object> symbolE = symbolValueTable.lookup($symbol.text);
 														if (symbolE != null) {
 															values.add(symbolE.symbol);
