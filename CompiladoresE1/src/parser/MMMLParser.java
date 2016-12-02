@@ -107,7 +107,7 @@ public class MMMLParser extends Parser {
 
 	int erros=0;
 	//inicializando a tabela com os simbolos pre-definidos na E4
-	NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>().voidStore("f","float").voidStore("i","integer").voidStore("c","char").voidStore("s","string").voidStore("b","boolean");
+	NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>();
 	NestedSymbolTable<Object> symbolValueTable = new NestedSymbolTable<Object>();
 	ArrayList<Object> values = new ArrayList<Object>();
 	ArrayList<String> names = new ArrayList<String>();
@@ -401,11 +401,6 @@ public class MMMLParser extends Parser {
 		enterRule(_localctx, 8, RULE_fdeclparams);
 
 		    ((FdeclparamsContext)_localctx).plist =  new ArrayList<String>();
-		    /*symbolTable.store("f","float");
-			symbolTable.store("i","integer");
-			symbolTable.store("c","char");
-			symbolTable.store("s","string");
-			symbolTable.store("b","boolean");*/
 
 		try {
 			setState(82);
@@ -1020,19 +1015,6 @@ public class MMMLParser extends Parser {
 				setState(134);
 				((Fbody_expr_ruleContext)_localctx).m = metaexpr(0);
 				((Fbody_expr_ruleContext)_localctx).oType =  ((Fbody_expr_ruleContext)_localctx).m.eType;
-				    												 /*if(((Fbody_expr_ruleContext)_localctx).m.eType == null){
-				    												 	System.out.println("Foram encontrados "+erros+" erros na expressao");
-				    												 }else if(((Fbody_expr_ruleContext)_localctx).m.eType.equals("boolean")){
-																		System.out.println("Expressao booleana");
-																	 }else if(((Fbody_expr_ruleContext)_localctx).m.eType.equals("float")){
-																		System.out.println("Expressao float");
-																     }else if(((Fbody_expr_ruleContext)_localctx).m.eType.equals("integer")){
-																		System.out.println("Expressao inteira");
-																	 }else if(((Fbody_expr_ruleContext)_localctx).m.eType.equals("char")){
-																	 	System.out.println("Expressao booleana");
-																	 }else{
-																		System.out.println("Foram encontrados "+erros+" erros na expressao");
-																	 }*/
 				}
 				break;
 			default:
@@ -1162,7 +1144,7 @@ public class MMMLParser extends Parser {
 			match(T__14);
 			setState(150);
 			((Letexpression_ruleContext)_localctx).a = funcbody();
-				for (int i=((Letexpression_ruleContext)_localctx).d.names.size(); i<=1; i--) {
+				for (int i=((Letexpression_ruleContext)_localctx).d.names.size(); i==0; i--) {
 						    												System.out.println("letexpr -> entrou no for de names" + names);
 						    												symbolTable.store(((Letexpression_ruleContext)_localctx).d.names.remove(((Letexpression_ruleContext)_localctx).d.names.size()-1), ((Letexpression_ruleContext)_localctx).a.oType); 
 						    												System.out.println("Adicionou na tabela de tipos os names");
@@ -1420,7 +1402,10 @@ public class MMMLParser extends Parser {
 				  ((Letvarattr_ruleContext)_localctx).letType =  ((Letvarattr_ruleContext)_localctx).f.oType;
 					         												if ((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null) != ""){
 					         													symbolTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null),((Letvarattr_ruleContext)_localctx).f.oType); System.out.println("Adicionou na tabela de tipos");
-					         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); System.out.println("removeu da pilha, adicionou na tabela de valores"); symbolValueTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null), obj1); }
+					         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); 
+					         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
+					         													symbolValueTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null), obj1); 
+					         													values.add(obj1);  }
 					         													System.out.print("simbolo "+(((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null)+" armazenado na tabela atual");
 					         													if(((Letvarattr_ruleContext)_localctx).f.oType==null){
 					         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1439,7 +1424,9 @@ public class MMMLParser extends Parser {
 				((Letvarresult_ignore_ruleContext)_localctx).f = funcbody();
 					((Letvarresult_ignore_ruleContext)_localctx).letType =  ((Letvarresult_ignore_ruleContext)_localctx).f.oType;
 				    															symbolTable.store("_",((Letvarresult_ignore_ruleContext)_localctx).f.oType);
-				    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); symbolValueTable.store("_", obj2); }
+				    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); 
+				    															symbolValueTable.store("_", obj2);
+				    															values.add(obj2);   }
 				    															System.out.print("simbolo _ armazenado na tabela atual");
 				    															if(((Letvarresult_ignore_ruleContext)_localctx).f.oType==null){
 				    																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1463,7 +1450,9 @@ public class MMMLParser extends Parser {
 					((Letunpack_ruleContext)_localctx).letType =  ((Letunpack_ruleContext)_localctx).s.oType;
 				    														if ((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null) != "" && (((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null) != ""){
 				    															symbolTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null),((Letunpack_ruleContext)_localctx).s.oType);
-				    															if (values.size() != 0){ Object obj3 = values.remove(0); symbolValueTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null), obj3); }
+				    															if (values.size() != 0){ Object obj3 = values.remove(0); 
+				    															symbolValueTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null), obj3);
+				    															values.add(obj3);    }
 				    															System.out.print("simbolo "+(((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null)+" armazenado na tabela atual");
 				    															if(((Letunpack_ruleContext)_localctx).s.oType==null){	
 				    																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");

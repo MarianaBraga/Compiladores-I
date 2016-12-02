@@ -24,10 +24,11 @@ def main =
 
 int erros=0;
 //inicializando a tabela com os simbolos pre-definidos na E4
-NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>().voidStore("f","float").voidStore("i","integer").voidStore("c","char").voidStore("s","string").voidStore("b","boolean");
+NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>();
 NestedSymbolTable<Object> symbolValueTable = new NestedSymbolTable<Object>();
 ArrayList<Object> values = new ArrayList<Object>();
 ArrayList<String> names = new ArrayList<String>();
+class simboloDaTabela { String nome; Object valor; }
 }
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
@@ -57,11 +58,6 @@ fdeclparams
 returns [List<String> plist]
 @init {
     $plist = new ArrayList<String>();
-    /*symbolTable.store("f","float");
-	symbolTable.store("i","integer");
-	symbolTable.store("c","char");
-	symbolTable.store("s","string");
-	symbolTable.store("b","boolean");*/
 }
 @after {
     for (String s : $plist) {
@@ -140,20 +136,7 @@ funcbody
 returns [String oType]:
         ifexpr                                       #fbody_if_rule
     |   let = letexpr                                      {$oType = $let.letexprType;} #fbody_let_rule
-    |   m=metaexpr                                   {$oType = $m.eType;
-    												 /*if($m.eType == null){
-    												 	System.out.println("Foram encontrados "+erros+" erros na expressao");
-    												 }else if($m.eType.equals("boolean")){
-														System.out.println("Expressao booleana");
-													 }else if($m.eType.equals("float")){
-														System.out.println("Expressao float");
-												     }else if($m.eType.equals("integer")){
-														System.out.println("Expressao inteira");
-													 }else if($m.eType.equals("char")){
-													 	System.out.println("Expressao booleana");
-													 }else{
-														System.out.println("Foram encontrados "+erros+" erros na expressao");
-													 }*/}#fbody_expr_rule
+    |   m=metaexpr                                   {$oType = $m.eType; simboloDaTabela.value = s }#fbody_expr_rule
     ;
 
 ifexpr
@@ -165,7 +148,7 @@ letexpr
     {symbolTable = new NestedSymbolTable<String>(symbolTable);
        symbolValueTable = new NestedSymbolTable<Object>(symbolValueTable);
     }
-    	'let' d = letlist 'in' a = funcbody               {	for (int i=$d.names.size(); i<=1; i--) {
+    	'let' d = letlist 'in' a = funcbody               {	for (int i=$d.names.size(); i==0; i--) {
 			    												System.out.println("letexpr -> entrou no for de names" + names);
 			    												symbolTable.store($d.names.remove($d.names.size()-1), $a.oType); 
 			    												System.out.println("Adicionou na tabela de tipos os names");
@@ -184,7 +167,7 @@ letlist
 
 letlist_cont
     returns [String name2]:
-     ',' b=letvarexpr                           { $name2 = $b.name1; System.out.println("name2 recebe name1"); }
+     ',' b=letvarexpr                           { $name2 = $b.name1; System.out.println("name2 recebe name1"); } //mudar name2 pra lista
       letlist_cont                                   #letlist_cont_rule
     |                                                #letlist_cont_end
     ;
@@ -195,14 +178,19 @@ letvarexpr
          '=' f=funcbody                         {  $letType = $f.oType;
 	         												if ($s.text != ""){
 	         													symbolTable.store($s.text,$f.oType); System.out.println("Adicionou na tabela de tipos");
-	         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); System.out.println("removeu da pilha, adicionou na tabela de valores"); symbolValueTable.store($s.text, obj1); }
+	         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); 
+	         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
+	         													symbolValueTable.store($s.text, obj1); 
+	         													values.add(obj1);  }
 	         													System.out.print("simbolo "+$s.text+" armazenado na tabela atual");
 	         													if($f.oType==null){
 	         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
 	         													}else{System.out.println("");}}}#letvarattr_rule
     |    '_'    '=' f=funcbody                           {	$letType = $f.oType;
     															symbolTable.store("_",$f.oType);
-    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); symbolValueTable.store("_", obj2); }
+    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); 
+    															symbolValueTable.store("_", obj2);
+    															values.add(obj2);   }
     															System.out.print("simbolo _ armazenado na tabela atual");
     															if($f.oType==null){
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -210,7 +198,9 @@ letvarexpr
     |    l=symbol '::' r=symbol '=' s=funcbody           {	$letType = $s.oType;
     														if ($l.text != "" && $r.text != ""){
     															symbolTable.store($l.text+$r.text,$s.oType);
-    															if (values.size() != 0){ Object obj3 = values.remove(0); symbolValueTable.store($l.text+$r.text, obj3); }
+    															if (values.size() != 0){ Object obj3 = values.remove(0); 
+    															symbolValueTable.store($l.text+$r.text, obj3);
+    															values.add(obj3);    }
     															System.out.print("simbolo "+$l.text+$r.text+" armazenado na tabela atual");
     															if($s.oType==null){	
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -218,7 +208,7 @@ letvarexpr
     ;
 
 metaexpr
-returns [String eType]
+returns [String eType, Object simboloDaTabela1]
     : '(' o=funcbody ')'                             {$eType = $o.oType;}#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG symbol                                 {$eType = "boolean";}     #me_boolneg_rule        // Negate a variable
@@ -240,7 +230,8 @@ returns [String eType]
 													  if (values.size() != 0) { 
 														 Integer v1c = (Integer)( values.remove(values.size()-1) );
 													     Integer v2c = (Integer)( values.remove(values.size()-1) );
-													     values.add(new Integer(v1c.intValue() + v2c.intValue()));
+													     simboloDaTabela = new String(v1c + v2c);
+													     values.add(simboloDaTabela);
 												     }
 													 }#me_listconcat_rule     // Sequence concatenation
 
@@ -257,7 +248,9 @@ returns [String eType]
 													  if (values.size() != 0) { 
 														 Integer v1dm = (Integer)( values.remove(values.size()-1) );
 													     Integer v2dm = (Integer)( values.remove(values.size()-1) );
-													     values.add(new Integer(v1dm.intValue() + v2dm.intValue()));
+													     $simboloDaTabela1 = new Integer(v1dm.intValue() + v2dm.intValue());
+													     values.add($simboloDaTabela1);
+												     }
 												     }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 
@@ -274,7 +267,9 @@ returns [String eType]
 													  if (values.size() != 0) { 
 														 Integer v1mm = (Integer)( values.remove(values.size()-1) );
 													     Integer v2mm = (Integer)( values.remove(values.size()-1) );
-													     values.add(new Integer(v1mm.intValue() + v2mm.intValue()));
+													     $simboloDaTabela1 = new Integer(v1mm.intValue() + v2mm.intValue());
+													     values.add($simboloDaTabela1);
+												     }
 												     }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 
@@ -284,12 +279,12 @@ returns [String eType]
 
     | l=metaexpr TOK_BOOL_AND_OR r=metaexpr         {$eType = "boolean";}#me_boolandor_rule      // &&   and  ||  are equal
 
-    | u=symbol                                      {
+    | u=symbol                                      {   $simboloDaTabela1.nome = $u.text; $simboloDaTabela1.valor = $u.value;
     													$eType = $u.sType;
     													System.out.println("1-entrei em symbol");
     													SymbolEntry<Object> symbolE = symbolValueTable.lookup($symbol.text);
 														if (symbolE != null) {
-															values.add(symbolE.symbol);
+															values.add($simboloDaTabela1);
 															System.out.println("Pilha -> " + values);
 														} else {
 															System.out.println("Variavel desconhecida: " + $symbol.text);	
