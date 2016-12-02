@@ -27,7 +27,6 @@ int erros=0;
 NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>();
 NestedSymbolTable<Object> symbolValueTable = new NestedSymbolTable<Object>();
 ArrayList<Object> values = new ArrayList<Object>();
-ArrayList<String> names = new ArrayList<String>();
 }
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
@@ -147,59 +146,49 @@ letexpr
     {symbolTable = new NestedSymbolTable<String>(symbolTable);
        symbolValueTable = new NestedSymbolTable<Object>(symbolValueTable);
     }
-    	'let' d = letlist 'in' a = funcbody               {	for (int i=$d.names.size(); i==0; i--) {
-			    												System.out.println("letexpr -> entrou no for de names" + names);
-			    												symbolTable.store($d.names.remove($d.names.size()-1), $a.oType); 
-			    												System.out.println("Adicionou na tabela de tipos os names");
-			    											  }
-    														$letexprType = $a.oType;
+    	'let' d = letlist 'in' a = funcbody               {	$letexprType = $a.oType;
     														System.out.println("voltando para a tabela pai");
     														symbolTable = symbolTable.getParent();
     														symbolValueTable = symbolValueTable.getParent();}#letexpression_rule
     ;
 
-letlist
-	returns [List<String> names]:
-     c=letvarexpr 								{ $names.add($c.name1); System.out.println("names.add"); } 
-     e=letlist_cont 						 	{ $names.add($e.name2); System.out.println("names.add"); }                      #letlist_rule
+letlist:
+     c=letvarexpr  e=letlist_cont 					                     #letlist_rule
     ;
 
-letlist_cont
-    returns [String name2]:
-     ',' b=letvarexpr                           { $name2 = $b.name1; System.out.println("name2 recebe name1"); } //mudar name2 pra lista
-      letlist_cont                                   #letlist_cont_rule
-    |                                                #letlist_cont_end
+letlist_cont:
+     ',' b=letvarexpr  letlist_cont                                   #letlist_cont_rule
+    |                                                                 #letlist_cont_end
     ;
 
 letvarexpr
 	returns [String letType, String name1]:
-         s=symbol 								{  $name1 = $s.text; values.add($s.text); System.out.println("values-->" + values); }
-         '=' f=funcbody                         {  $letType = $f.oType;
+         s=symbol  '=' f=funcbody                         {  $name1 = $s.text; System.out.println("values-->" + values); $letType = $f.oType;
 	         												if ($s.text != ""){
 	         													symbolTable.store($s.text,$f.oType); System.out.println("Adicionou na tabela de tipos");
 	         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); 
 	         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
 	         													symbolValueTable.store($s.text, obj1); 
-	         													values.add(obj1);  }
+	         													values.add(obj1); System.out.println("values-->" + values); }
 	         													System.out.print("simbolo "+$s.text+" armazenado na tabela atual");
 	         													if($f.oType==null){
 	         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
 	         													}else{System.out.println("");}}}#letvarattr_rule
-    |    '_'    '=' f=funcbody                           {	$letType = $f.oType;
+    |    '_'    '=' f=funcbody                           {  $name1 = "_";	System.out.println("values-->" + values); $letType = $f.oType;
     															symbolTable.store("_",$f.oType);
     															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); 
     															symbolValueTable.store("_", obj2);
-    															values.add(obj2);   }
+    															values.add(obj2); System.out.println("values-->" + values);  }
     															System.out.print("simbolo _ armazenado na tabela atual");
     															if($f.oType==null){
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
     															}else{System.out.println("");}}#letvarresult_ignore_rule
-    |    l=symbol '::' r=symbol '=' s=funcbody           {	$letType = $s.oType;
+    |    l=symbol '::' r=symbol '=' s=funcbody           {  $name1 = $l.text + $r.text;  System.out.println("values-->" + values);	$letType = $s.oType;
     														if ($l.text != "" && $r.text != ""){
     															symbolTable.store($l.text+$r.text,$s.oType);
     															if (values.size() != 0){ Object obj3 = values.remove(0); 
     															symbolValueTable.store($l.text+$r.text, obj3);
-    															values.add(obj3);    }
+    															values.add(obj3);  System.out.println("values-->" + values);  }
     															System.out.print("simbolo "+$l.text+$r.text+" armazenado na tabela atual");
     															if($s.oType==null){	
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -207,7 +196,7 @@ letvarexpr
     ;
 
 metaexpr
-returns [String eType]
+returns [String eType, Object valueOfSymbol]
     : '(' o=funcbody ')'                             {$eType = $o.oType;}#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG symbol                                 {$eType = "boolean";}     #me_boolneg_rule        // Negate a variable
@@ -226,10 +215,12 @@ returns [String eType]
 														erros++;
 														$eType = null;
 													  }
-													  if (values.size() != 0) { 
-														 Integer v1c = (Integer)( values.remove(values.size()-1) );
-													     Integer v2c = (Integer)( values.remove(values.size()-1) );
-													     values.add(new Integer(v1c.intValue() + v2c.intValue()));
+													  if (values.size() >= 2) { 
+														 String v1c = (String) (values.remove(values.size()-1));
+													     String v2c = (String) (values.remove(values.size()-1));
+													     System.out.println("V1: " + v1c + "V2: " + v2c);
+													     values.add(String.valueOf(v1c) + String.valueOf(v2c));
+													     System.out.println("values-->" + values);
 												     }
 													 }#me_listconcat_rule     // Sequence concatenation
 
@@ -243,10 +234,20 @@ returns [String eType]
 													    erros++;
 													    $eType = null;
 													  }
-													  if (values.size() != 0) { 
-														 Integer v1dm = (Integer)( values.remove(values.size()-1) );
-													     Integer v2dm = (Integer)( values.remove(values.size()-1) );
-													     values.add(new Integer(v1dm.intValue() + v2dm.intValue()));
+													  if (values.size() >= 2) { 
+													     if (TOK_DIV_OR_MUL == '/') {
+														     Integer v1dm = (Integer) (values.remove(values.size()-1));
+														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
+														     values.add(new Integer (v1dm / v2dm));
+														     System.out.println("values-->" + values);
+													     } else {
+													     	 Integer v1dm = (Integer) (values.remove(values.size()-1));
+														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
+													     	 values.add(new Integer (v1dm * v2dm));
+													     	 System.out.println("values-->" + values);
+													     }
 												     }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 
@@ -260,10 +261,20 @@ returns [String eType]
 													    erros++;
 													    $eType = null;
 													  }
-													  if (values.size() != 0) { 
-														 Integer v1mm = (Integer)( values.remove(values.size()-1) );
-													     Integer v2mm = (Integer)( values.remove(values.size()-1) );
-													     values.add(new Integer(v1mm.intValue() + v2mm.intValue()));
+													  if (values.size() >=2) { 
+													     if (TOK_PLUS_OR_MINUS == '+') {
+														     Integer v1mm = (Integer) (values.remove(values.size()-1));
+														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
+														     values.add(new Integer (v1mm + v2mm));
+														     System.out.println("values-->" + values);
+													     } else {
+														     Integer v1mm = (Integer) (values.remove(values.size()-1));
+														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
+													     	values.add(new Integer (v1mm - v2mm));
+													     	System.out.println("values-->" + values);
+													     }
 												     }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 
@@ -277,14 +288,13 @@ returns [String eType]
     													$eType = $u.sType;
     													System.out.println("1-entrei em symbol");
     													SymbolEntry<Object> symbolE = symbolValueTable.lookup($symbol.text);
-														if (symbolE != null) {
-															values.add(symbolE.symbol);
-															System.out.println("Pilha -> " + values);
-														} else {
+														if (symbolE == null) {
 															System.out.println("Variavel desconhecida: " + $symbol.text);	
 														}
     												}  #me_exprsymbol_rule     // a single symbol
-    | y=literal                                      {$eType = $y.lType;}#me_exprliteral_rule    // literal value
+    | y=literal                                      { $valueOfSymbol = $y.valueOfSymbol;
+    													values.add($valueOfSymbol);
+    												   $eType = $y.lType;}#me_exprliteral_rule    // literal value
     | funcall                                        #me_exprfuncall_rule    // a funcion call
     | t=cast                                         {$eType = $t.cType;}#me_exprcast_rule       // cast a type to other
     ;
@@ -315,15 +325,17 @@ funcall_params_cont
     ;
 
 literal
-returns [String lType]:
+returns [String lType,  Object valueOfSymbol]:
         'nil'                                           {$lType = "boolean";} #literalnil_rule
     |   'true'                                          {$lType = "boolean";} #literaltrue_rule
-    |   n=number                                        {$lType = $n.cType;} #literalnumber_rule
-    |   strlit                                          {$lType = "string";} #literalstring_rule
+    |   n = number                                        { $valueOfSymbol = $n.valueOfSymbol;   $lType = $n.cType;} #literalnumber_rule
+    |   s = strlit                                          { $valueOfSymbol = $s.valueOfSymbol;   $lType = "string";} #literalstring_rule
     |   charlit                                         {$lType = "char";} #literal_char_rule
     ;
 
-strlit: TOK_STR_LIT
+strlit 
+returns [String sType, Object valueOfSymbol]:
+	  t = TOK_STR_LIT                                      {  $valueOfSymbol = $t.text;    }
     ;
 
 charlit
@@ -331,9 +343,9 @@ charlit
     ;
 
 number
-returns [String cType]:
-        FLOAT                                           {$cType = "float";}#numberfloat_rule
-    |   DECIMAL                                         {$cType = "integer";}#numberdecimal_rule
+returns [String cType, Object valueOfSymbol]:
+        f = FLOAT                                           { $valueOfSymbol = $f.text;  $cType = "float";}#numberfloat_rule
+    |   d = DECIMAL                                         { $valueOfSymbol = $d.text;  $cType = "integer";}#numberdecimal_rule
     |   HEXADECIMAL                                     {$cType = "integer";}#numberhexadecimal_rule
     |   BINARY                                          {$cType = "integer";}#numberbinary_rule
                 ;

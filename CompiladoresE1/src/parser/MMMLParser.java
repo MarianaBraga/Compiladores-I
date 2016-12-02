@@ -1144,12 +1144,7 @@ public class MMMLParser extends Parser {
 			match(T__14);
 			setState(150);
 			((Letexpression_ruleContext)_localctx).a = funcbody();
-				for (int i=((Letexpression_ruleContext)_localctx).d.names.size(); i==0; i--) {
-						    												System.out.println("letexpr -> entrou no for de names" + names);
-						    												symbolTable.store(((Letexpression_ruleContext)_localctx).d.names.remove(((Letexpression_ruleContext)_localctx).d.names.size()-1), ((Letexpression_ruleContext)_localctx).a.oType); 
-						    												System.out.println("Adicionou na tabela de tipos os names");
-						    											  }
-			    														((Letexpression_ruleContext)_localctx).letexprType =  ((Letexpression_ruleContext)_localctx).a.oType;
+				((Letexpression_ruleContext)_localctx).letexprType =  ((Letexpression_ruleContext)_localctx).a.oType;
 			    														System.out.println("voltando para a tabela pai");
 			    														symbolTable = symbolTable.getParent();
 			    														symbolValueTable = symbolValueTable.getParent();
@@ -1167,7 +1162,6 @@ public class MMMLParser extends Parser {
 	}
 
 	public static class LetlistContext extends ParserRuleContext {
-		public List<String> names;
 		public LetlistContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1176,7 +1170,6 @@ public class MMMLParser extends Parser {
 		public LetlistContext() { }
 		public void copyFrom(LetlistContext ctx) {
 			super.copyFrom(ctx);
-			this.names = ctx.names;
 		}
 	}
 	public static class Letlist_ruleContext extends LetlistContext {
@@ -1208,10 +1201,8 @@ public class MMMLParser extends Parser {
 			{
 			setState(153);
 			((Letlist_ruleContext)_localctx).c = letvarexpr();
-			 _localctx.names.add(((Letlist_ruleContext)_localctx).c.name1); System.out.println("names.add"); 
-			setState(155);
+			setState(154);
 			((Letlist_ruleContext)_localctx).e = letlist_cont();
-			 _localctx.names.add(((Letlist_ruleContext)_localctx).e.name2); System.out.println("names.add"); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -1226,7 +1217,6 @@ public class MMMLParser extends Parser {
 	}
 
 	public static class Letlist_contContext extends ParserRuleContext {
-		public String name2;
 		public Letlist_contContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1235,7 +1225,6 @@ public class MMMLParser extends Parser {
 		public Letlist_contContext() { }
 		public void copyFrom(Letlist_contContext ctx) {
 			super.copyFrom(ctx);
-			this.name2 = ctx.name2;
 		}
 	}
 	public static class Letlist_cont_endContext extends Letlist_contContext {
@@ -1272,18 +1261,17 @@ public class MMMLParser extends Parser {
 		Letlist_contContext _localctx = new Letlist_contContext(_ctx, getState());
 		enterRule(_localctx, 30, RULE_letlist_cont);
 		try {
-			setState(164);
+			setState(161);
 			switch (_input.LA(1)) {
 			case T__3:
 				_localctx = new Letlist_cont_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(158);
+				setState(156);
 				match(T__3);
-				setState(159);
+				setState(157);
 				((Letlist_cont_ruleContext)_localctx).b = letvarexpr();
-				 ((Letlist_cont_ruleContext)_localctx).name2 =  ((Letlist_cont_ruleContext)_localctx).b.name1; System.out.println("name2 recebe name1"); 
-				setState(161);
+				setState(158);
 				letlist_cont();
 				}
 				break;
@@ -1385,27 +1373,26 @@ public class MMMLParser extends Parser {
 		LetvarexprContext _localctx = new LetvarexprContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_letvarexpr);
 		try {
-			setState(184);
+			setState(180);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,8,_ctx) ) {
 			case 1:
 				_localctx = new Letvarattr_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(166);
+				setState(163);
 				((Letvarattr_ruleContext)_localctx).s = symbol();
-				  ((Letvarattr_ruleContext)_localctx).name1 =  (((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null); values.add((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null)); System.out.println("values-->" + values); 
-				setState(168);
+				setState(164);
 				match(T__2);
-				setState(169);
+				setState(165);
 				((Letvarattr_ruleContext)_localctx).f = funcbody();
-				  ((Letvarattr_ruleContext)_localctx).letType =  ((Letvarattr_ruleContext)_localctx).f.oType;
+				  ((Letvarattr_ruleContext)_localctx).name1 =  (((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null); System.out.println("values-->" + values); ((Letvarattr_ruleContext)_localctx).letType =  ((Letvarattr_ruleContext)_localctx).f.oType;
 					         												if ((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null) != ""){
 					         													symbolTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null),((Letvarattr_ruleContext)_localctx).f.oType); System.out.println("Adicionou na tabela de tipos");
 					         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); 
 					         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
 					         													symbolValueTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null), obj1); 
-					         													values.add(obj1);  }
+					         													values.add(obj1); System.out.println("values-->" + values); }
 					         													System.out.print("simbolo "+(((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null)+" armazenado na tabela atual");
 					         													if(((Letvarattr_ruleContext)_localctx).f.oType==null){
 					         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1416,17 +1403,17 @@ public class MMMLParser extends Parser {
 				_localctx = new Letvarresult_ignore_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(172);
+				setState(168);
 				match(T__15);
-				setState(173);
+				setState(169);
 				match(T__2);
-				setState(174);
+				setState(170);
 				((Letvarresult_ignore_ruleContext)_localctx).f = funcbody();
-					((Letvarresult_ignore_ruleContext)_localctx).letType =  ((Letvarresult_ignore_ruleContext)_localctx).f.oType;
+				  ((Letvarresult_ignore_ruleContext)_localctx).name1 =  "_";	System.out.println("values-->" + values); ((Letvarresult_ignore_ruleContext)_localctx).letType =  ((Letvarresult_ignore_ruleContext)_localctx).f.oType;
 				    															symbolTable.store("_",((Letvarresult_ignore_ruleContext)_localctx).f.oType);
 				    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); 
 				    															symbolValueTable.store("_", obj2);
-				    															values.add(obj2);   }
+				    															values.add(obj2); System.out.println("values-->" + values);  }
 				    															System.out.print("simbolo _ armazenado na tabela atual");
 				    															if(((Letvarresult_ignore_ruleContext)_localctx).f.oType==null){
 				    																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1437,22 +1424,22 @@ public class MMMLParser extends Parser {
 				_localctx = new Letunpack_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(177);
+				setState(173);
 				((Letunpack_ruleContext)_localctx).l = symbol();
-				setState(178);
+				setState(174);
 				match(TOK_CONCAT);
-				setState(179);
+				setState(175);
 				((Letunpack_ruleContext)_localctx).r = symbol();
-				setState(180);
+				setState(176);
 				match(T__2);
-				setState(181);
+				setState(177);
 				((Letunpack_ruleContext)_localctx).s = funcbody();
-					((Letunpack_ruleContext)_localctx).letType =  ((Letunpack_ruleContext)_localctx).s.oType;
+				  ((Letunpack_ruleContext)_localctx).name1 =  (((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null) + (((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null);  System.out.println("values-->" + values);	((Letunpack_ruleContext)_localctx).letType =  ((Letunpack_ruleContext)_localctx).s.oType;
 				    														if ((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null) != "" && (((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null) != ""){
 				    															symbolTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null),((Letunpack_ruleContext)_localctx).s.oType);
 				    															if (values.size() != 0){ Object obj3 = values.remove(0); 
 				    															symbolValueTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null), obj3);
-				    															values.add(obj3);    }
+				    															values.add(obj3);  System.out.println("values-->" + values);  }
 				    															System.out.print("simbolo "+(((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null)+" armazenado na tabela atual");
 				    															if(((Letunpack_ruleContext)_localctx).s.oType==null){	
 				    																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1474,6 +1461,7 @@ public class MMMLParser extends Parser {
 
 	public static class MetaexprContext extends ParserRuleContext {
 		public String eType;
+		public Object valueOfSymbol;
 		public MetaexprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1483,6 +1471,7 @@ public class MMMLParser extends Parser {
 		public void copyFrom(MetaexprContext ctx) {
 			super.copyFrom(ctx);
 			this.eType = ctx.eType;
+			this.valueOfSymbol = ctx.valueOfSymbol;
 		}
 	}
 	public static class Me_exprplusminus_ruleContext extends MetaexprContext {
@@ -1761,7 +1750,7 @@ public class MMMLParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(213);
+			setState(209);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,9,_ctx) ) {
 			case 1:
@@ -1770,11 +1759,11 @@ public class MMMLParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 
-				setState(187);
+				setState(183);
 				match(T__16);
-				setState(188);
+				setState(184);
 				((Me_exprparens_ruleContext)_localctx).o = funcbody();
-				setState(189);
+				setState(185);
 				match(T__17);
 				((Me_exprparens_ruleContext)_localctx).eType =  ((Me_exprparens_ruleContext)_localctx).o.oType;
 				}
@@ -1784,7 +1773,7 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_list_create_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(192);
+				setState(188);
 				sequence_expr();
 				}
 				break;
@@ -1793,9 +1782,9 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_boolneg_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(193);
+				setState(189);
 				match(TOK_NEG);
-				setState(194);
+				setState(190);
 				((Me_boolneg_ruleContext)_localctx).symbol = symbol();
 				((Me_boolneg_ruleContext)_localctx).eType =  "boolean";
 				}
@@ -1805,13 +1794,13 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_boolnegparens_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(197);
+				setState(193);
 				match(TOK_NEG);
-				setState(198);
+				setState(194);
 				match(T__16);
-				setState(199);
+				setState(195);
 				funcbody();
-				setState(200);
+				setState(196);
 				match(T__17);
 				((Me_boolnegparens_ruleContext)_localctx).eType =  "boolean";
 				}
@@ -1821,16 +1810,13 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_exprsymbol_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(203);
+				setState(199);
 				((Me_exprsymbol_ruleContext)_localctx).u = ((Me_exprsymbol_ruleContext)_localctx).symbol = symbol();
 
 				    													((Me_exprsymbol_ruleContext)_localctx).eType =  ((Me_exprsymbol_ruleContext)_localctx).u.sType;
 				    													System.out.println("1-entrei em symbol");
 				    													SymbolEntry<Object> symbolE = symbolValueTable.lookup((((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
-																		if (symbolE != null) {
-																			values.add(symbol.value);
-																			System.out.println("Pilha -> " + values);
-																		} else {
+																		if (symbolE == null) {
 																			System.out.println("Variavel desconhecida: " + (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));	
 																		}
 				    												
@@ -1841,9 +1827,11 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_exprliteral_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(206);
+				setState(202);
 				((Me_exprliteral_ruleContext)_localctx).y = literal();
-				((Me_exprliteral_ruleContext)_localctx).eType =  ((Me_exprliteral_ruleContext)_localctx).y.lType;
+				 ((Me_exprliteral_ruleContext)_localctx).valueOfSymbol =  ((Me_exprliteral_ruleContext)_localctx).y.valueOfSymbol;
+				    													values.add(_localctx.valueOfSymbol);
+				    												   ((Me_exprliteral_ruleContext)_localctx).eType =  ((Me_exprliteral_ruleContext)_localctx).y.lType;
 				}
 				break;
 			case 7:
@@ -1851,7 +1839,7 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_exprfuncall_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(209);
+				setState(205);
 				funcall();
 				}
 				break;
@@ -1860,14 +1848,14 @@ public class MMMLParser extends Parser {
 				_localctx = new Me_exprcast_ruleContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
-				setState(210);
+				setState(206);
 				((Me_exprcast_ruleContext)_localctx).t = cast();
 				((Me_exprcast_ruleContext)_localctx).eType =  ((Me_exprcast_ruleContext)_localctx).t.cType;
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(252);
+			setState(248);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -1875,7 +1863,7 @@ public class MMMLParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(250);
+					setState(246);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
 					case 1:
@@ -1883,11 +1871,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_exprpower_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_exprpower_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(215);
+						setState(211);
 						if (!(precpred(_ctx, 11))) throw new FailedPredicateException(this, "precpred(_ctx, 11)");
-						setState(216);
+						setState(212);
 						match(TOK_POWER);
-						setState(217);
+						setState(213);
 						((Me_exprpower_ruleContext)_localctx).r = metaexpr(12);
 						if((!((Me_exprpower_ruleContext)_localctx).l.eType.equals("string") && !((Me_exprpower_ruleContext)_localctx).r.eType.equals("string")) && (!((Me_exprpower_ruleContext)_localctx).l.eType.equals("boolean") && !((Me_exprpower_ruleContext)_localctx).r.eType.equals("boolean"))){
 						          															((Me_exprpower_ruleContext)_localctx).eType =  "float";
@@ -1903,11 +1891,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_listconcat_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_listconcat_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(220);
+						setState(216);
 						if (!(precpred(_ctx, 10))) throw new FailedPredicateException(this, "precpred(_ctx, 10)");
-						setState(221);
+						setState(217);
 						match(TOK_CONCAT);
-						setState(222);
+						setState(218);
 						((Me_listconcat_ruleContext)_localctx).r = metaexpr(11);
 						if(((Me_listconcat_ruleContext)_localctx).l.eType.equals("string") && ((Me_listconcat_ruleContext)_localctx).r.eType.equals("string")){
 						          														((Me_listconcat_ruleContext)_localctx).eType =  "string";
@@ -1915,10 +1903,12 @@ public class MMMLParser extends Parser {
 						          														erros++;
 						          														((Me_listconcat_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  if (values.size() != 0) { 
-						          														 Integer v1c = (Integer)( values.remove(values.size()-1) );
-						          													     Integer v2c = (Integer)( values.remove(values.size()-1) );
-						          													     values.add(new Integer(v1c.intValue() + v2c.intValue()));
+						          													  if (values.size() >= 2) { 
+						          														 String v1c = (String) (values.remove(values.size()-1));
+						          													     String v2c = (String) (values.remove(values.size()-1));
+						          													     System.out.println("V1: " + v1c + "V2: " + v2c);
+						          													     values.add(String.valueOf(v1c) + String.valueOf(v2c));
+						          													     System.out.println("values-->" + values);
 						          												     }
 						          													 
 						}
@@ -1928,11 +1918,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_exprmuldiv_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_exprmuldiv_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(225);
+						setState(221);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
-						setState(226);
+						setState(222);
 						match(TOK_DIV_OR_MUL);
-						setState(227);
+						setState(223);
 						((Me_exprmuldiv_ruleContext)_localctx).r = metaexpr(10);
 						if((!((Me_exprmuldiv_ruleContext)_localctx).l.eType.equals("string") && !((Me_exprmuldiv_ruleContext)_localctx).r.eType.equals("string")) && (!((Me_exprmuldiv_ruleContext)_localctx).l.eType.equals("boolean") && !((Me_exprmuldiv_ruleContext)_localctx).r.eType.equals("boolean"))){
 						          														if(((Me_exprmuldiv_ruleContext)_localctx).l.eType.equals("float") || ((Me_exprmuldiv_ruleContext)_localctx).r.eType.equals("float")){
@@ -1944,10 +1934,20 @@ public class MMMLParser extends Parser {
 						          													    erros++;
 						          													    ((Me_exprmuldiv_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  if (values.size() != 0) { 
-						          														 Integer v1dm = (Integer)( values.remove(values.size()-1) );
-						          													     Integer v2dm = (Integer)( values.remove(values.size()-1) );
-						          													     values.add(new Integer(v1dm.intValue() + v2dm.intValue()));
+						          													  if (values.size() >= 2) { 
+						          													     if (TOK_DIV_OR_MUL == '/') {
+						          														     Integer v1dm = (Integer) (values.remove(values.size()-1));
+						          														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+						          														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
+						          														     values.add(new Integer (v1dm / v2dm));
+						          														     System.out.println("values-->" + values);
+						          													     } else {
+						          													     	 Integer v1dm = (Integer) (values.remove(values.size()-1));
+						          														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+						          														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
+						          													     	 values.add(new Integer (v1dm * v2dm));
+						          													     	 System.out.println("values-->" + values);
+						          													     }
 						          												     }
 						          													 
 						}
@@ -1957,11 +1957,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_exprplusminus_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_exprplusminus_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(230);
+						setState(226);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
-						setState(231);
+						setState(227);
 						match(TOK_PLUS_OR_MINUS);
-						setState(232);
+						setState(228);
 						((Me_exprplusminus_ruleContext)_localctx).r = metaexpr(9);
 						if((!((Me_exprplusminus_ruleContext)_localctx).l.eType.equals("string") && !((Me_exprplusminus_ruleContext)_localctx).r.eType.equals("string")) && (!((Me_exprplusminus_ruleContext)_localctx).l.eType.equals("boolean") && !((Me_exprplusminus_ruleContext)_localctx).r.eType.equals("boolean"))){
 						          														if(((Me_exprplusminus_ruleContext)_localctx).l.eType.equals("float") || ((Me_exprplusminus_ruleContext)_localctx).r.eType.equals("float")){
@@ -1973,10 +1973,20 @@ public class MMMLParser extends Parser {
 						          													    erros++;
 						          													    ((Me_exprplusminus_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  if (values.size() != 0) { 
-						          														 Integer v1mm = (Integer)( values.remove(values.size()-1) );
-						          													     Integer v2mm = (Integer)( values.remove(values.size()-1) );
-						          													     values.add(new Integer(v1mm.intValue() + v2mm.intValue()));
+						          													  if (values.size() >=2) { 
+						          													     if (TOK_PLUS_OR_MINUS == '+') {
+						          														     Integer v1mm = (Integer) (values.remove(values.size()-1));
+						          														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+						          														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
+						          														     values.add(new Integer (v1mm + v2mm));
+						          														     System.out.println("values-->" + values);
+						          													     } else {
+						          														     Integer v1mm = (Integer) (values.remove(values.size()-1));
+						          														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+						          														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
+						          													     	values.add(new Integer (v1mm - v2mm));
+						          													     	System.out.println("values-->" + values);
+						          													     }
 						          												     }
 						          													 
 						}
@@ -1986,11 +1996,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_boolgtlt_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_boolgtlt_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(235);
+						setState(231);
 						if (!(precpred(_ctx, 7))) throw new FailedPredicateException(this, "precpred(_ctx, 7)");
-						setState(236);
+						setState(232);
 						match(TOK_CMP_GT_LT);
-						setState(237);
+						setState(233);
 						((Me_boolgtlt_ruleContext)_localctx).r = metaexpr(8);
 						((Me_boolgtlt_ruleContext)_localctx).eType =  "boolean";
 						}
@@ -2000,11 +2010,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_booleqdiff_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_booleqdiff_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(240);
+						setState(236);
 						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
-						setState(241);
+						setState(237);
 						match(TOK_CMP_EQ_DIFF);
-						setState(242);
+						setState(238);
 						((Me_booleqdiff_ruleContext)_localctx).r = metaexpr(7);
 						((Me_booleqdiff_ruleContext)_localctx).eType =  "boolean"; 
 						}
@@ -2014,11 +2024,11 @@ public class MMMLParser extends Parser {
 						_localctx = new Me_boolandor_ruleContext(new MetaexprContext(_parentctx, _parentState));
 						((Me_boolandor_ruleContext)_localctx).l = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_metaexpr);
-						setState(245);
+						setState(241);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
-						setState(246);
+						setState(242);
 						match(TOK_BOOL_AND_OR);
-						setState(247);
+						setState(243);
 						((Me_boolandor_ruleContext)_localctx).r = metaexpr(6);
 						((Me_boolandor_ruleContext)_localctx).eType =  "boolean";
 						}
@@ -2026,7 +2036,7 @@ public class MMMLParser extends Parser {
 					}
 					} 
 				}
-				setState(254);
+				setState(250);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,11,_ctx);
 			}
@@ -2076,11 +2086,11 @@ public class MMMLParser extends Parser {
 			_localctx = new Se_create_seqContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(255);
+			setState(251);
 			match(T__18);
-			setState(256);
+			setState(252);
 			funcbody();
-			setState(257);
+			setState(253);
 			match(T__19);
 			}
 		}
@@ -2131,9 +2141,9 @@ public class MMMLParser extends Parser {
 			_localctx = new Funcall_ruleContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(259);
+			setState(255);
 			symbol();
-			setState(260);
+			setState(256);
 			funcall_params();
 			}
 		}
@@ -2187,9 +2197,9 @@ public class MMMLParser extends Parser {
 			_localctx = new Cast_ruleContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(262);
+			setState(258);
 			((Cast_ruleContext)_localctx).t = type();
-			setState(263);
+			setState(259);
 			funcbody();
 			((Cast_ruleContext)_localctx).cType =  ((Cast_ruleContext)_localctx).t.tType;
 			}
@@ -2249,7 +2259,7 @@ public class MMMLParser extends Parser {
 		Funcall_paramsContext _localctx = new Funcall_paramsContext(_ctx, getState());
 		enterRule(_localctx, 42, RULE_funcall_params);
 		try {
-			setState(270);
+			setState(266);
 			switch (_input.LA(1)) {
 			case T__5:
 			case T__6:
@@ -2270,9 +2280,9 @@ public class MMMLParser extends Parser {
 				_localctx = new Funcallparams_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(266);
+				setState(262);
 				metaexpr(0);
-				setState(267);
+				setState(263);
 				funcall_params_cont();
 				}
 				break;
@@ -2280,7 +2290,7 @@ public class MMMLParser extends Parser {
 				_localctx = new Funcallnoparam_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(269);
+				setState(265);
 				match(T__15);
 				}
 				break;
@@ -2343,16 +2353,16 @@ public class MMMLParser extends Parser {
 		Funcall_params_contContext _localctx = new Funcall_params_contContext(_ctx, getState());
 		enterRule(_localctx, 44, RULE_funcall_params_cont);
 		try {
-			setState(276);
+			setState(272);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,13,_ctx) ) {
 			case 1:
 				_localctx = new Funcall_params_cont_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(272);
+				setState(268);
 				metaexpr(0);
-				setState(273);
+				setState(269);
 				funcall_params_cont();
 				}
 				break;
@@ -2377,6 +2387,7 @@ public class MMMLParser extends Parser {
 
 	public static class LiteralContext extends ParserRuleContext {
 		public String lType;
+		public Object valueOfSymbol;
 		public LiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2386,6 +2397,7 @@ public class MMMLParser extends Parser {
 		public void copyFrom(LiteralContext ctx) {
 			super.copyFrom(ctx);
 			this.lType = ctx.lType;
+			this.valueOfSymbol = ctx.valueOfSymbol;
 		}
 	}
 	public static class Literal_char_ruleContext extends LiteralContext {
@@ -2440,6 +2452,7 @@ public class MMMLParser extends Parser {
 		}
 	}
 	public static class Literalstring_ruleContext extends LiteralContext {
+		public StrlitContext s;
 		public StrlitContext strlit() {
 			return getRuleContext(StrlitContext.class,0);
 		}
@@ -2458,13 +2471,13 @@ public class MMMLParser extends Parser {
 		LiteralContext _localctx = new LiteralContext(_ctx, getState());
 		enterRule(_localctx, 46, RULE_literal);
 		try {
-			setState(291);
+			setState(287);
 			switch (_input.LA(1)) {
 			case T__20:
 				_localctx = new Literalnil_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(278);
+				setState(274);
 				match(T__20);
 				((Literalnil_ruleContext)_localctx).lType =  "boolean";
 				}
@@ -2473,7 +2486,7 @@ public class MMMLParser extends Parser {
 				_localctx = new Literaltrue_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(280);
+				setState(276);
 				match(T__21);
 				((Literaltrue_ruleContext)_localctx).lType =  "boolean";
 				}
@@ -2485,25 +2498,25 @@ public class MMMLParser extends Parser {
 				_localctx = new Literalnumber_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(282);
+				setState(278);
 				((Literalnumber_ruleContext)_localctx).n = number();
-				((Literalnumber_ruleContext)_localctx).lType =  ((Literalnumber_ruleContext)_localctx).n.cType;
+				 ((Literalnumber_ruleContext)_localctx).valueOfSymbol =  ((Literalnumber_ruleContext)_localctx).n.valueOfSymbol;   ((Literalnumber_ruleContext)_localctx).lType =  ((Literalnumber_ruleContext)_localctx).n.cType;
 				}
 				break;
 			case TOK_STR_LIT:
 				_localctx = new Literalstring_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(285);
-				strlit();
-				((Literalstring_ruleContext)_localctx).lType =  "string";
+				setState(281);
+				((Literalstring_ruleContext)_localctx).s = strlit();
+				 ((Literalstring_ruleContext)_localctx).valueOfSymbol =  ((Literalstring_ruleContext)_localctx).s.valueOfSymbol;   ((Literalstring_ruleContext)_localctx).lType =  "string";
 				}
 				break;
 			case TOK_CHAR_LIT:
 				_localctx = new Literal_char_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(288);
+				setState(284);
 				charlit();
 				((Literal_char_ruleContext)_localctx).lType =  "char";
 				}
@@ -2524,6 +2537,9 @@ public class MMMLParser extends Parser {
 	}
 
 	public static class StrlitContext extends ParserRuleContext {
+		public String sType;
+		public Object valueOfSymbol;
+		public Token t;
 		public TerminalNode TOK_STR_LIT() { return getToken(MMMLParser.TOK_STR_LIT, 0); }
 		public StrlitContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2545,8 +2561,9 @@ public class MMMLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(293);
-			match(TOK_STR_LIT);
+			setState(289);
+			((StrlitContext)_localctx).t = match(TOK_STR_LIT);
+			  ((StrlitContext)_localctx).valueOfSymbol =  (((StrlitContext)_localctx).t!=null?((StrlitContext)_localctx).t.getText():null);    
 			}
 		}
 		catch (RecognitionException re) {
@@ -2582,7 +2599,7 @@ public class MMMLParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(295);
+			setState(292);
 			match(TOK_CHAR_LIT);
 			}
 		}
@@ -2599,6 +2616,7 @@ public class MMMLParser extends Parser {
 
 	public static class NumberContext extends ParserRuleContext {
 		public String cType;
+		public Object valueOfSymbol;
 		public NumberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2608,9 +2626,11 @@ public class MMMLParser extends Parser {
 		public void copyFrom(NumberContext ctx) {
 			super.copyFrom(ctx);
 			this.cType = ctx.cType;
+			this.valueOfSymbol = ctx.valueOfSymbol;
 		}
 	}
 	public static class Numberfloat_ruleContext extends NumberContext {
+		public Token f;
 		public TerminalNode FLOAT() { return getToken(MMMLParser.FLOAT, 0); }
 		public Numberfloat_ruleContext(NumberContext ctx) { copyFrom(ctx); }
 		@Override
@@ -2623,6 +2643,7 @@ public class MMMLParser extends Parser {
 		}
 	}
 	public static class Numberdecimal_ruleContext extends NumberContext {
+		public Token d;
 		public TerminalNode DECIMAL() { return getToken(MMMLParser.DECIMAL, 0); }
 		public Numberdecimal_ruleContext(NumberContext ctx) { copyFrom(ctx); }
 		@Override
@@ -2663,31 +2684,31 @@ public class MMMLParser extends Parser {
 		NumberContext _localctx = new NumberContext(_ctx, getState());
 		enterRule(_localctx, 52, RULE_number);
 		try {
-			setState(305);
+			setState(302);
 			switch (_input.LA(1)) {
 			case FLOAT:
 				_localctx = new Numberfloat_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(297);
-				match(FLOAT);
-				((Numberfloat_ruleContext)_localctx).cType =  "float";
+				setState(294);
+				((Numberfloat_ruleContext)_localctx).f = match(FLOAT);
+				 ((Numberfloat_ruleContext)_localctx).valueOfSymbol =  (((Numberfloat_ruleContext)_localctx).f!=null?((Numberfloat_ruleContext)_localctx).f.getText():null);  ((Numberfloat_ruleContext)_localctx).cType =  "float";
 				}
 				break;
 			case DECIMAL:
 				_localctx = new Numberdecimal_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(299);
-				match(DECIMAL);
-				((Numberdecimal_ruleContext)_localctx).cType =  "integer";
+				setState(296);
+				((Numberdecimal_ruleContext)_localctx).d = match(DECIMAL);
+				 ((Numberdecimal_ruleContext)_localctx).valueOfSymbol =  (((Numberdecimal_ruleContext)_localctx).d!=null?((Numberdecimal_ruleContext)_localctx).d.getText():null);  ((Numberdecimal_ruleContext)_localctx).cType =  "integer";
 				}
 				break;
 			case HEXADECIMAL:
 				_localctx = new Numberhexadecimal_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(301);
+				setState(298);
 				match(HEXADECIMAL);
 				((Numberhexadecimal_ruleContext)_localctx).cType =  "integer";
 				}
@@ -2696,7 +2717,7 @@ public class MMMLParser extends Parser {
 				_localctx = new Numberbinary_ruleContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(303);
+				setState(300);
 				match(BINARY);
 				((Numberbinary_ruleContext)_localctx).cType =  "integer";
 				}
@@ -2750,7 +2771,7 @@ public class MMMLParser extends Parser {
 			_localctx = new Symbol_ruleContext(_localctx);
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(307);
+			setState(304);
 			((Symbol_ruleContext)_localctx).y = match(TOK_ID);
 			((Symbol_ruleContext)_localctx).sType =  null;
 																System.out.println("simbolo detectado, procurando por: "+(((Symbol_ruleContext)_localctx).y!=null?((Symbol_ruleContext)_localctx).y.getText():null));
@@ -2817,7 +2838,7 @@ public class MMMLParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3*\u0139\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3*\u0136\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -2828,98 +2849,97 @@ public class MMMLParser extends Parser {
 		"\3\13\3\13\5\13v\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\f\7\f\u0080\n\f\f"+
 		"\f\16\f\u0083\13\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u008c\n\r\3\16\3\16"+
 		"\3\16\3\16\3\16\3\16\3\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\3\20\3\20"+
-		"\3\20\3\20\3\20\3\21\3\21\3\21\3\21\3\21\3\21\5\21\u00a7\n\21\3\22\3\22"+
-		"\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22"+
-		"\3\22\3\22\5\22\u00bb\n\22\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
+		"\3\20\3\21\3\21\3\21\3\21\3\21\5\21\u00a4\n\21\3\22\3\22\3\22\3\22\3\22"+
+		"\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\3\22\5\22\u00b7"+
+		"\n\22\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
 		"\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
-		"\3\23\3\23\3\23\3\23\5\23\u00d8\n\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
+		"\5\23\u00d4\n\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
 		"\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
-		"\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23"+
-		"\7\23\u00fd\n\23\f\23\16\23\u0100\13\23\3\24\3\24\3\24\3\24\3\25\3\25"+
-		"\3\25\3\26\3\26\3\26\3\26\3\27\3\27\3\27\3\27\5\27\u0111\n\27\3\30\3\30"+
-		"\3\30\3\30\5\30\u0117\n\30\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31"+
-		"\3\31\3\31\3\31\3\31\5\31\u0126\n\31\3\32\3\32\3\33\3\33\3\34\3\34\3\34"+
-		"\3\34\3\34\3\34\3\34\3\34\5\34\u0134\n\34\3\35\3\35\3\35\3\35\2\4\26$"+
-		"\36\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668\2\2\u0140"+
-		"\2:\3\2\2\2\4B\3\2\2\2\6D\3\2\2\2\bI\3\2\2\2\nT\3\2\2\2\f\\\3\2\2\2\16"+
-		"^\3\2\2\2\20c\3\2\2\2\22k\3\2\2\2\24u\3\2\2\2\26w\3\2\2\2\30\u008b\3\2"+
-		"\2\2\32\u008d\3\2\2\2\34\u0094\3\2\2\2\36\u009b\3\2\2\2 \u00a6\3\2\2\2"+
-		"\"\u00ba\3\2\2\2$\u00d7\3\2\2\2&\u0101\3\2\2\2(\u0105\3\2\2\2*\u0108\3"+
-		"\2\2\2,\u0110\3\2\2\2.\u0116\3\2\2\2\60\u0125\3\2\2\2\62\u0127\3\2\2\2"+
-		"\64\u0129\3\2\2\2\66\u0133\3\2\2\28\u0135\3\2\2\2:;\5\4\3\2;<\5\6\4\2"+
-		"<=\b\2\1\2=\3\3\2\2\2>?\5\b\5\2?@\5\4\3\2@C\3\2\2\2AC\3\2\2\2B>\3\2\2"+
-		"\2BA\3\2\2\2C\5\3\2\2\2DE\7\3\2\2EF\7\4\2\2FG\7\5\2\2GH\5\30\r\2H\7\3"+
-		"\2\2\2IJ\7\3\2\2JK\5\20\t\2KL\5\n\6\2LM\7\5\2\2MN\5\30\r\2N\t\3\2\2\2"+
-		"OP\5\16\b\2PQ\b\6\1\2QR\5\f\7\2RU\3\2\2\2SU\3\2\2\2TO\3\2\2\2TS\3\2\2"+
-		"\2U\13\3\2\2\2VW\7\6\2\2WX\5\16\b\2XY\b\7\1\2YZ\5\f\7\2Z]\3\2\2\2[]\3"+
-		"\2\2\2\\V\3\2\2\2\\[\3\2\2\2]\r\3\2\2\2^_\58\35\2_`\7\7\2\2`a\5\22\n\2"+
-		"ab\b\b\1\2b\17\3\2\2\2cd\7\33\2\2d\21\3\2\2\2ef\5\24\13\2fg\b\n\1\2gl"+
-		"\3\2\2\2hi\5\26\f\2ij\b\n\1\2jl\3\2\2\2ke\3\2\2\2kh\3\2\2\2l\23\3\2\2"+
-		"\2mn\7\b\2\2nv\b\13\1\2op\7\t\2\2pv\b\13\1\2qr\7\n\2\2rv\b\13\1\2st\7"+
-		"\13\2\2tv\b\13\1\2um\3\2\2\2uo\3\2\2\2uq\3\2\2\2us\3\2\2\2v\25\3\2\2\2"+
-		"wx\b\f\1\2xy\5\24\13\2yz\7\f\2\2z{\b\f\1\2{\u0081\3\2\2\2|}\f\3\2\2}~"+
-		"\7\f\2\2~\u0080\b\f\1\2\177|\3\2\2\2\u0080\u0083\3\2\2\2\u0081\177\3\2"+
-		"\2\2\u0081\u0082\3\2\2\2\u0082\27\3\2\2\2\u0083\u0081\3\2\2\2\u0084\u008c"+
-		"\5\32\16\2\u0085\u0086\5\34\17\2\u0086\u0087\b\r\1\2\u0087\u008c\3\2\2"+
-		"\2\u0088\u0089\5$\23\2\u0089\u008a\b\r\1\2\u008a\u008c\3\2\2\2\u008b\u0084"+
-		"\3\2\2\2\u008b\u0085\3\2\2\2\u008b\u0088\3\2\2\2\u008c\31\3\2\2\2\u008d"+
-		"\u008e\7\r\2\2\u008e\u008f\5\30\r\2\u008f\u0090\7\16\2\2\u0090\u0091\5"+
-		"\30\r\2\u0091\u0092\7\17\2\2\u0092\u0093\5\30\r\2\u0093\33\3\2\2\2\u0094"+
-		"\u0095\b\17\1\2\u0095\u0096\7\20\2\2\u0096\u0097\5\36\20\2\u0097\u0098"+
-		"\7\21\2\2\u0098\u0099\5\30\r\2\u0099\u009a\b\17\1\2\u009a\35\3\2\2\2\u009b"+
-		"\u009c\5\"\22\2\u009c\u009d\b\20\1\2\u009d\u009e\5 \21\2\u009e\u009f\b"+
-		"\20\1\2\u009f\37\3\2\2\2\u00a0\u00a1\7\6\2\2\u00a1\u00a2\5\"\22\2\u00a2"+
-		"\u00a3\b\21\1\2\u00a3\u00a4\5 \21\2\u00a4\u00a7\3\2\2\2\u00a5\u00a7\3"+
-		"\2\2\2\u00a6\u00a0\3\2\2\2\u00a6\u00a5\3\2\2\2\u00a7!\3\2\2\2\u00a8\u00a9"+
-		"\58\35\2\u00a9\u00aa\b\22\1\2\u00aa\u00ab\7\5\2\2\u00ab\u00ac\5\30\r\2"+
-		"\u00ac\u00ad\b\22\1\2\u00ad\u00bb\3\2\2\2\u00ae\u00af\7\22\2\2\u00af\u00b0"+
-		"\7\5\2\2\u00b0\u00b1\5\30\r\2\u00b1\u00b2\b\22\1\2\u00b2\u00bb\3\2\2\2"+
-		"\u00b3\u00b4\58\35\2\u00b4\u00b5\7\34\2\2\u00b5\u00b6\58\35\2\u00b6\u00b7"+
-		"\7\5\2\2\u00b7\u00b8\5\30\r\2\u00b8\u00b9\b\22\1\2\u00b9\u00bb\3\2\2\2"+
-		"\u00ba\u00a8\3\2\2\2\u00ba\u00ae\3\2\2\2\u00ba\u00b3\3\2\2\2\u00bb#\3"+
-		"\2\2\2\u00bc\u00bd\b\23\1\2\u00bd\u00be\7\23\2\2\u00be\u00bf\5\30\r\2"+
-		"\u00bf\u00c0\7\24\2\2\u00c0\u00c1\b\23\1\2\u00c1\u00d8\3\2\2\2\u00c2\u00d8"+
-		"\5&\24\2\u00c3\u00c4\7\35\2\2\u00c4\u00c5\58\35\2\u00c5\u00c6\b\23\1\2"+
-		"\u00c6\u00d8\3\2\2\2\u00c7\u00c8\7\35\2\2\u00c8\u00c9\7\23\2\2\u00c9\u00ca"+
-		"\5\30\r\2\u00ca\u00cb\7\24\2\2\u00cb\u00cc\b\23\1\2\u00cc\u00d8\3\2\2"+
-		"\2\u00cd\u00ce\58\35\2\u00ce\u00cf\b\23\1\2\u00cf\u00d8\3\2\2\2\u00d0"+
-		"\u00d1\5\60\31\2\u00d1\u00d2\b\23\1\2\u00d2\u00d8\3\2\2\2\u00d3\u00d8"+
-		"\5(\25\2\u00d4\u00d5\5*\26\2\u00d5\u00d6\b\23\1\2\u00d6\u00d8\3\2\2\2"+
-		"\u00d7\u00bc\3\2\2\2\u00d7\u00c2\3\2\2\2\u00d7\u00c3\3\2\2\2\u00d7\u00c7"+
-		"\3\2\2\2\u00d7\u00cd\3\2\2\2\u00d7\u00d0\3\2\2\2\u00d7\u00d3\3\2\2\2\u00d7"+
-		"\u00d4\3\2\2\2\u00d8\u00fe\3\2\2\2\u00d9\u00da\f\r\2\2\u00da\u00db\7\36"+
-		"\2\2\u00db\u00dc\5$\23\16\u00dc\u00dd\b\23\1\2\u00dd\u00fd\3\2\2\2\u00de"+
-		"\u00df\f\f\2\2\u00df\u00e0\7\34\2\2\u00e0\u00e1\5$\23\r\u00e1\u00e2\b"+
-		"\23\1\2\u00e2\u00fd\3\2\2\2\u00e3\u00e4\f\13\2\2\u00e4\u00e5\7\37\2\2"+
-		"\u00e5\u00e6\5$\23\f\u00e6\u00e7\b\23\1\2\u00e7\u00fd\3\2\2\2\u00e8\u00e9"+
-		"\f\n\2\2\u00e9\u00ea\7 \2\2\u00ea\u00eb\5$\23\13\u00eb\u00ec\b\23\1\2"+
-		"\u00ec\u00fd\3\2\2\2\u00ed\u00ee\f\t\2\2\u00ee\u00ef\7!\2\2\u00ef\u00f0"+
-		"\5$\23\n\u00f0\u00f1\b\23\1\2\u00f1\u00fd\3\2\2\2\u00f2\u00f3\f\b\2\2"+
-		"\u00f3\u00f4\7\"\2\2\u00f4\u00f5\5$\23\t\u00f5\u00f6\b\23\1\2\u00f6\u00fd"+
-		"\3\2\2\2\u00f7\u00f8\f\7\2\2\u00f8\u00f9\7#\2\2\u00f9\u00fa\5$\23\b\u00fa"+
-		"\u00fb\b\23\1\2\u00fb\u00fd\3\2\2\2\u00fc\u00d9\3\2\2\2\u00fc\u00de\3"+
-		"\2\2\2\u00fc\u00e3\3\2\2\2\u00fc\u00e8\3\2\2\2\u00fc\u00ed\3\2\2\2\u00fc"+
-		"\u00f2\3\2\2\2\u00fc\u00f7\3\2\2\2\u00fd\u0100\3\2\2\2\u00fe\u00fc\3\2"+
-		"\2\2\u00fe\u00ff\3\2\2\2\u00ff%\3\2\2\2\u0100\u00fe\3\2\2\2\u0101\u0102"+
-		"\7\25\2\2\u0102\u0103\5\30\r\2\u0103\u0104\7\26\2\2\u0104\'\3\2\2\2\u0105"+
-		"\u0106\58\35\2\u0106\u0107\5,\27\2\u0107)\3\2\2\2\u0108\u0109\5\22\n\2"+
-		"\u0109\u010a\5\30\r\2\u010a\u010b\b\26\1\2\u010b+\3\2\2\2\u010c\u010d"+
-		"\5$\23\2\u010d\u010e\5.\30\2\u010e\u0111\3\2\2\2\u010f\u0111\7\22\2\2"+
-		"\u0110\u010c\3\2\2\2\u0110\u010f\3\2\2\2\u0111-\3\2\2\2\u0112\u0113\5"+
-		"$\23\2\u0113\u0114\5.\30\2\u0114\u0117\3\2\2\2\u0115\u0117\3\2\2\2\u0116"+
-		"\u0112\3\2\2\2\u0116\u0115\3\2\2\2\u0117/\3\2\2\2\u0118\u0119\7\27\2\2"+
-		"\u0119\u0126\b\31\1\2\u011a\u011b\7\30\2\2\u011b\u0126\b\31\1\2\u011c"+
-		"\u011d\5\66\34\2\u011d\u011e\b\31\1\2\u011e\u0126\3\2\2\2\u011f\u0120"+
-		"\5\62\32\2\u0120\u0121\b\31\1\2\u0121\u0126\3\2\2\2\u0122\u0123\5\64\33"+
-		"\2\u0123\u0124\b\31\1\2\u0124\u0126\3\2\2\2\u0125\u0118\3\2\2\2\u0125"+
-		"\u011a\3\2\2\2\u0125\u011c\3\2\2\2\u0125\u011f\3\2\2\2\u0125\u0122\3\2"+
-		"\2\2\u0126\61\3\2\2\2\u0127\u0128\7%\2\2\u0128\63\3\2\2\2\u0129\u012a"+
-		"\7&\2\2\u012a\65\3\2\2\2\u012b\u012c\7\'\2\2\u012c\u0134\b\34\1\2\u012d"+
-		"\u012e\7(\2\2\u012e\u0134\b\34\1\2\u012f\u0130\7)\2\2\u0130\u0134\b\34"+
-		"\1\2\u0131\u0132\7*\2\2\u0132\u0134\b\34\1\2\u0133\u012b\3\2\2\2\u0133"+
-		"\u012d\3\2\2\2\u0133\u012f\3\2\2\2\u0133\u0131\3\2\2\2\u0134\67\3\2\2"+
-		"\2\u0135\u0136\7\33\2\2\u0136\u0137\b\35\1\2\u01379\3\2\2\2\22BT\\ku\u0081"+
-		"\u008b\u00a6\u00ba\u00d7\u00fc\u00fe\u0110\u0116\u0125\u0133";
+		"\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\3\23\7\23\u00f9\n\23\f\23"+
+		"\16\23\u00fc\13\23\3\24\3\24\3\24\3\24\3\25\3\25\3\25\3\26\3\26\3\26\3"+
+		"\26\3\27\3\27\3\27\3\27\5\27\u010d\n\27\3\30\3\30\3\30\3\30\5\30\u0113"+
+		"\n\30\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31\3\31"+
+		"\5\31\u0122\n\31\3\32\3\32\3\32\3\33\3\33\3\34\3\34\3\34\3\34\3\34\3\34"+
+		"\3\34\3\34\5\34\u0131\n\34\3\35\3\35\3\35\3\35\2\4\26$\36\2\4\6\b\n\f"+
+		"\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668\2\2\u013d\2:\3\2\2\2"+
+		"\4B\3\2\2\2\6D\3\2\2\2\bI\3\2\2\2\nT\3\2\2\2\f\\\3\2\2\2\16^\3\2\2\2\20"+
+		"c\3\2\2\2\22k\3\2\2\2\24u\3\2\2\2\26w\3\2\2\2\30\u008b\3\2\2\2\32\u008d"+
+		"\3\2\2\2\34\u0094\3\2\2\2\36\u009b\3\2\2\2 \u00a3\3\2\2\2\"\u00b6\3\2"+
+		"\2\2$\u00d3\3\2\2\2&\u00fd\3\2\2\2(\u0101\3\2\2\2*\u0104\3\2\2\2,\u010c"+
+		"\3\2\2\2.\u0112\3\2\2\2\60\u0121\3\2\2\2\62\u0123\3\2\2\2\64\u0126\3\2"+
+		"\2\2\66\u0130\3\2\2\28\u0132\3\2\2\2:;\5\4\3\2;<\5\6\4\2<=\b\2\1\2=\3"+
+		"\3\2\2\2>?\5\b\5\2?@\5\4\3\2@C\3\2\2\2AC\3\2\2\2B>\3\2\2\2BA\3\2\2\2C"+
+		"\5\3\2\2\2DE\7\3\2\2EF\7\4\2\2FG\7\5\2\2GH\5\30\r\2H\7\3\2\2\2IJ\7\3\2"+
+		"\2JK\5\20\t\2KL\5\n\6\2LM\7\5\2\2MN\5\30\r\2N\t\3\2\2\2OP\5\16\b\2PQ\b"+
+		"\6\1\2QR\5\f\7\2RU\3\2\2\2SU\3\2\2\2TO\3\2\2\2TS\3\2\2\2U\13\3\2\2\2V"+
+		"W\7\6\2\2WX\5\16\b\2XY\b\7\1\2YZ\5\f\7\2Z]\3\2\2\2[]\3\2\2\2\\V\3\2\2"+
+		"\2\\[\3\2\2\2]\r\3\2\2\2^_\58\35\2_`\7\7\2\2`a\5\22\n\2ab\b\b\1\2b\17"+
+		"\3\2\2\2cd\7\33\2\2d\21\3\2\2\2ef\5\24\13\2fg\b\n\1\2gl\3\2\2\2hi\5\26"+
+		"\f\2ij\b\n\1\2jl\3\2\2\2ke\3\2\2\2kh\3\2\2\2l\23\3\2\2\2mn\7\b\2\2nv\b"+
+		"\13\1\2op\7\t\2\2pv\b\13\1\2qr\7\n\2\2rv\b\13\1\2st\7\13\2\2tv\b\13\1"+
+		"\2um\3\2\2\2uo\3\2\2\2uq\3\2\2\2us\3\2\2\2v\25\3\2\2\2wx\b\f\1\2xy\5\24"+
+		"\13\2yz\7\f\2\2z{\b\f\1\2{\u0081\3\2\2\2|}\f\3\2\2}~\7\f\2\2~\u0080\b"+
+		"\f\1\2\177|\3\2\2\2\u0080\u0083\3\2\2\2\u0081\177\3\2\2\2\u0081\u0082"+
+		"\3\2\2\2\u0082\27\3\2\2\2\u0083\u0081\3\2\2\2\u0084\u008c\5\32\16\2\u0085"+
+		"\u0086\5\34\17\2\u0086\u0087\b\r\1\2\u0087\u008c\3\2\2\2\u0088\u0089\5"+
+		"$\23\2\u0089\u008a\b\r\1\2\u008a\u008c\3\2\2\2\u008b\u0084\3\2\2\2\u008b"+
+		"\u0085\3\2\2\2\u008b\u0088\3\2\2\2\u008c\31\3\2\2\2\u008d\u008e\7\r\2"+
+		"\2\u008e\u008f\5\30\r\2\u008f\u0090\7\16\2\2\u0090\u0091\5\30\r\2\u0091"+
+		"\u0092\7\17\2\2\u0092\u0093\5\30\r\2\u0093\33\3\2\2\2\u0094\u0095\b\17"+
+		"\1\2\u0095\u0096\7\20\2\2\u0096\u0097\5\36\20\2\u0097\u0098\7\21\2\2\u0098"+
+		"\u0099\5\30\r\2\u0099\u009a\b\17\1\2\u009a\35\3\2\2\2\u009b\u009c\5\""+
+		"\22\2\u009c\u009d\5 \21\2\u009d\37\3\2\2\2\u009e\u009f\7\6\2\2\u009f\u00a0"+
+		"\5\"\22\2\u00a0\u00a1\5 \21\2\u00a1\u00a4\3\2\2\2\u00a2\u00a4\3\2\2\2"+
+		"\u00a3\u009e\3\2\2\2\u00a3\u00a2\3\2\2\2\u00a4!\3\2\2\2\u00a5\u00a6\5"+
+		"8\35\2\u00a6\u00a7\7\5\2\2\u00a7\u00a8\5\30\r\2\u00a8\u00a9\b\22\1\2\u00a9"+
+		"\u00b7\3\2\2\2\u00aa\u00ab\7\22\2\2\u00ab\u00ac\7\5\2\2\u00ac\u00ad\5"+
+		"\30\r\2\u00ad\u00ae\b\22\1\2\u00ae\u00b7\3\2\2\2\u00af\u00b0\58\35\2\u00b0"+
+		"\u00b1\7\34\2\2\u00b1\u00b2\58\35\2\u00b2\u00b3\7\5\2\2\u00b3\u00b4\5"+
+		"\30\r\2\u00b4\u00b5\b\22\1\2\u00b5\u00b7\3\2\2\2\u00b6\u00a5\3\2\2\2\u00b6"+
+		"\u00aa\3\2\2\2\u00b6\u00af\3\2\2\2\u00b7#\3\2\2\2\u00b8\u00b9\b\23\1\2"+
+		"\u00b9\u00ba\7\23\2\2\u00ba\u00bb\5\30\r\2\u00bb\u00bc\7\24\2\2\u00bc"+
+		"\u00bd\b\23\1\2\u00bd\u00d4\3\2\2\2\u00be\u00d4\5&\24\2\u00bf\u00c0\7"+
+		"\35\2\2\u00c0\u00c1\58\35\2\u00c1\u00c2\b\23\1\2\u00c2\u00d4\3\2\2\2\u00c3"+
+		"\u00c4\7\35\2\2\u00c4\u00c5\7\23\2\2\u00c5\u00c6\5\30\r\2\u00c6\u00c7"+
+		"\7\24\2\2\u00c7\u00c8\b\23\1\2\u00c8\u00d4\3\2\2\2\u00c9\u00ca\58\35\2"+
+		"\u00ca\u00cb\b\23\1\2\u00cb\u00d4\3\2\2\2\u00cc\u00cd\5\60\31\2\u00cd"+
+		"\u00ce\b\23\1\2\u00ce\u00d4\3\2\2\2\u00cf\u00d4\5(\25\2\u00d0\u00d1\5"+
+		"*\26\2\u00d1\u00d2\b\23\1\2\u00d2\u00d4\3\2\2\2\u00d3\u00b8\3\2\2\2\u00d3"+
+		"\u00be\3\2\2\2\u00d3\u00bf\3\2\2\2\u00d3\u00c3\3\2\2\2\u00d3\u00c9\3\2"+
+		"\2\2\u00d3\u00cc\3\2\2\2\u00d3\u00cf\3\2\2\2\u00d3\u00d0\3\2\2\2\u00d4"+
+		"\u00fa\3\2\2\2\u00d5\u00d6\f\r\2\2\u00d6\u00d7\7\36\2\2\u00d7\u00d8\5"+
+		"$\23\16\u00d8\u00d9\b\23\1\2\u00d9\u00f9\3\2\2\2\u00da\u00db\f\f\2\2\u00db"+
+		"\u00dc\7\34\2\2\u00dc\u00dd\5$\23\r\u00dd\u00de\b\23\1\2\u00de\u00f9\3"+
+		"\2\2\2\u00df\u00e0\f\13\2\2\u00e0\u00e1\7\37\2\2\u00e1\u00e2\5$\23\f\u00e2"+
+		"\u00e3\b\23\1\2\u00e3\u00f9\3\2\2\2\u00e4\u00e5\f\n\2\2\u00e5\u00e6\7"+
+		" \2\2\u00e6\u00e7\5$\23\13\u00e7\u00e8\b\23\1\2\u00e8\u00f9\3\2\2\2\u00e9"+
+		"\u00ea\f\t\2\2\u00ea\u00eb\7!\2\2\u00eb\u00ec\5$\23\n\u00ec\u00ed\b\23"+
+		"\1\2\u00ed\u00f9\3\2\2\2\u00ee\u00ef\f\b\2\2\u00ef\u00f0\7\"\2\2\u00f0"+
+		"\u00f1\5$\23\t\u00f1\u00f2\b\23\1\2\u00f2\u00f9\3\2\2\2\u00f3\u00f4\f"+
+		"\7\2\2\u00f4\u00f5\7#\2\2\u00f5\u00f6\5$\23\b\u00f6\u00f7\b\23\1\2\u00f7"+
+		"\u00f9\3\2\2\2\u00f8\u00d5\3\2\2\2\u00f8\u00da\3\2\2\2\u00f8\u00df\3\2"+
+		"\2\2\u00f8\u00e4\3\2\2\2\u00f8\u00e9\3\2\2\2\u00f8\u00ee\3\2\2\2\u00f8"+
+		"\u00f3\3\2\2\2\u00f9\u00fc\3\2\2\2\u00fa\u00f8\3\2\2\2\u00fa\u00fb\3\2"+
+		"\2\2\u00fb%\3\2\2\2\u00fc\u00fa\3\2\2\2\u00fd\u00fe\7\25\2\2\u00fe\u00ff"+
+		"\5\30\r\2\u00ff\u0100\7\26\2\2\u0100\'\3\2\2\2\u0101\u0102\58\35\2\u0102"+
+		"\u0103\5,\27\2\u0103)\3\2\2\2\u0104\u0105\5\22\n\2\u0105\u0106\5\30\r"+
+		"\2\u0106\u0107\b\26\1\2\u0107+\3\2\2\2\u0108\u0109\5$\23\2\u0109\u010a"+
+		"\5.\30\2\u010a\u010d\3\2\2\2\u010b\u010d\7\22\2\2\u010c\u0108\3\2\2\2"+
+		"\u010c\u010b\3\2\2\2\u010d-\3\2\2\2\u010e\u010f\5$\23\2\u010f\u0110\5"+
+		".\30\2\u0110\u0113\3\2\2\2\u0111\u0113\3\2\2\2\u0112\u010e\3\2\2\2\u0112"+
+		"\u0111\3\2\2\2\u0113/\3\2\2\2\u0114\u0115\7\27\2\2\u0115\u0122\b\31\1"+
+		"\2\u0116\u0117\7\30\2\2\u0117\u0122\b\31\1\2\u0118\u0119\5\66\34\2\u0119"+
+		"\u011a\b\31\1\2\u011a\u0122\3\2\2\2\u011b\u011c\5\62\32\2\u011c\u011d"+
+		"\b\31\1\2\u011d\u0122\3\2\2\2\u011e\u011f\5\64\33\2\u011f\u0120\b\31\1"+
+		"\2\u0120\u0122\3\2\2\2\u0121\u0114\3\2\2\2\u0121\u0116\3\2\2\2\u0121\u0118"+
+		"\3\2\2\2\u0121\u011b\3\2\2\2\u0121\u011e\3\2\2\2\u0122\61\3\2\2\2\u0123"+
+		"\u0124\7%\2\2\u0124\u0125\b\32\1\2\u0125\63\3\2\2\2\u0126\u0127\7&\2\2"+
+		"\u0127\65\3\2\2\2\u0128\u0129\7\'\2\2\u0129\u0131\b\34\1\2\u012a\u012b"+
+		"\7(\2\2\u012b\u0131\b\34\1\2\u012c\u012d\7)\2\2\u012d\u0131\b\34\1\2\u012e"+
+		"\u012f\7*\2\2\u012f\u0131\b\34\1\2\u0130\u0128\3\2\2\2\u0130\u012a\3\2"+
+		"\2\2\u0130\u012c\3\2\2\2\u0130\u012e\3\2\2\2\u0131\67\3\2\2\2\u0132\u0133"+
+		"\7\33\2\2\u0133\u0134\b\35\1\2\u01349\3\2\2\2\22BT\\ku\u0081\u008b\u00a3"+
+		"\u00b6\u00d3\u00f8\u00fa\u010c\u0112\u0121\u0130";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
