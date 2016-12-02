@@ -1475,6 +1475,7 @@ public class MMMLParser extends Parser {
 	}
 	public static class Me_exprplusminus_ruleContext extends MetaexprContext {
 		public MetaexprContext l;
+		public Token TOK_PLUS_OR_MINUS;
 		public MetaexprContext r;
 		public TerminalNode TOK_PLUS_OR_MINUS() { return getToken(MMMLParser.TOK_PLUS_OR_MINUS, 0); }
 		public List<MetaexprContext> metaexpr() {
@@ -1560,6 +1561,7 @@ public class MMMLParser extends Parser {
 	}
 	public static class Me_exprmuldiv_ruleContext extends MetaexprContext {
 		public MetaexprContext l;
+		public Token TOK_DIV_OR_MUL;
 		public MetaexprContext r;
 		public TerminalNode TOK_DIV_OR_MUL() { return getToken(MMMLParser.TOK_DIV_OR_MUL, 0); }
 		public List<MetaexprContext> metaexpr() {
@@ -1745,14 +1747,6 @@ public class MMMLParser extends Parser {
 		MetaexprContext _prevctx = _localctx;
 		int _startState = 34;
 		enterRecursionRule(_localctx, 34, RULE_metaexpr, _p);
-
-		    String v1c;
-		    String v2c;
-		    String v1dm;
-		    String v2dm;
-		    String v1mm;
-		    String v2mm;
-
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
@@ -1911,14 +1905,12 @@ public class MMMLParser extends Parser {
 						          														erros++;
 						          														((Me_listconcat_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  //if (values.size() >= 2) { 
-						          													  	System.out.println("Entrei em concatenacao");
-						          														 v1c = (String) (values.remove(values.size()-1));
-						          													     v2c = (String) (values.remove(values.size()-1));
-						          													     System.out.println("V1: " + v1c + " - V2: " + v2c);
-						          													     values.add(new String(v2c + v1c));
-						          													     System.out.println("values-->" + values);
-						          												     //}
+						          												  	 System.out.println("Entrei em concatenacao");
+						          													 String v1c = (String) (values.remove(values.size()-1));
+						          												     String v2c = (String) (values.remove(values.size()-1));
+						          												     System.out.println("V1: " + v1c + " - V2: " + v2c);
+						          												     values.add(new String(v2c + v1c));
+						          												     System.out.println("values-->" + values);
 						          													 
 						}
 						break;
@@ -1930,7 +1922,7 @@ public class MMMLParser extends Parser {
 						setState(221);
 						if (!(precpred(_ctx, 9))) throw new FailedPredicateException(this, "precpred(_ctx, 9)");
 						setState(222);
-						match(TOK_DIV_OR_MUL);
+						((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL = match(TOK_DIV_OR_MUL);
 						setState(223);
 						((Me_exprmuldiv_ruleContext)_localctx).r = metaexpr(10);
 						if((!((Me_exprmuldiv_ruleContext)_localctx).l.eType.equals("string") && !((Me_exprmuldiv_ruleContext)_localctx).r.eType.equals("string")) && (!((Me_exprmuldiv_ruleContext)_localctx).l.eType.equals("boolean") && !((Me_exprmuldiv_ruleContext)_localctx).r.eType.equals("boolean"))){
@@ -1943,25 +1935,25 @@ public class MMMLParser extends Parser {
 						          													    erros++;
 						          													    ((Me_exprmuldiv_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  //if (values.size() >= 2) { 
-						          													     if (TOK_DIV_OR_MUL == '/') {
-						          													     	 System.out.println("Entrei em divisao");
-						          														     v1dm = (String) (values.remove(values.size()-1));
-						          														     v2dm = (String) (values.remove(values.size()-1));
-						          														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-						          														     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm)) / new Integer(Integer.parseInt(v2dm));
-						          														     values.add(_localctx.valueOfSymbol);
-						          														     System.out.println("values-->" + values);
-						          													     } else {
-						          													     	 System.out.println("Entrei em multiplicacao");
-						          													     	 v1dm = (String) (values.remove(values.size()-1));
-						          														     v2dm = (String) (values.remove(values.size()-1));
-						          														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-						          														     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm)) * new Integer(Integer.parseInt(v2dm));
-						          													     	 values.add(_localctx.valueOfSymbol);
-						          													     	 System.out.println("values-->" + values);
-						          													     }
-						          												    // }
+						          												     if ((((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL!=null?((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL.getText():null).equals("/")) {
+						          												     	 System.out.println("Entrei em divisao");
+						          												     	 System.out.println("Operacao: " + (((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL!=null?((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL.getText():null));
+						          													     String v1dm = (String) (values.remove(values.size()-1));
+						          													     String v2dm = (String) (values.remove(values.size()-1));
+						          													     System.out.println("V1: " + v1dm + "V2: " + v2dm);
+						          													     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm)) / new Integer(Integer.parseInt(v2dm));
+						          													     values.add(_localctx.valueOfSymbol);
+						          													     System.out.println("values-->" + values);
+						          												     } else {
+						          												     	 System.out.println("Entrei em multiplicacao");
+						          												     	 System.out.println("Operacao: " + (((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL!=null?((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL.getText():null));
+						          												     	 String v1dm = (String) (values.remove(values.size()-1));
+						          													     String v2dm = (String) (values.remove(values.size()-1));
+						          													     System.out.println("V1: " + v1dm + "V2: " + v2dm);
+						          													     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm)) * new Integer(Integer.parseInt(v2dm));
+						          												     	 values.add(_localctx.valueOfSymbol);
+						          												     	 System.out.println("values-->" + values);
+						          												     }
 						          													 
 						}
 						break;
@@ -1973,7 +1965,7 @@ public class MMMLParser extends Parser {
 						setState(226);
 						if (!(precpred(_ctx, 8))) throw new FailedPredicateException(this, "precpred(_ctx, 8)");
 						setState(227);
-						match(TOK_PLUS_OR_MINUS);
+						((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS = match(TOK_PLUS_OR_MINUS);
 						setState(228);
 						((Me_exprplusminus_ruleContext)_localctx).r = metaexpr(9);
 						if((!((Me_exprplusminus_ruleContext)_localctx).l.eType.equals("string") && !((Me_exprplusminus_ruleContext)_localctx).r.eType.equals("string")) && (!((Me_exprplusminus_ruleContext)_localctx).l.eType.equals("boolean") && !((Me_exprplusminus_ruleContext)_localctx).r.eType.equals("boolean"))){
@@ -1986,25 +1978,26 @@ public class MMMLParser extends Parser {
 						          													    erros++;
 						          													    ((Me_exprplusminus_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  //if (values.size() >=2) { 
-						          													     if (TOK_PLUS_OR_MINUS == '+') {
-						          													     	System.out.println("Entrei em soma");
-						          														     v1mm = (String) values.remove(values.size()-1);
-						          														     v2mm = (String) values.remove(values.size()-1);
-						          														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-						          														     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm)) + new Integer(Integer.parseInt(v2mm));
-						          														     values.add(_localctx.valueOfSymbol);
-						          														     System.out.println("values-->" + values);
-						          													     } else {
-						          													     	 System.out.println("Entrei em subtracao");
-						          														     v1mm = (String) (values.remove(values.size()-1));
-						          														     v2mm = (String) (values.remove(values.size()-1));
-						          														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-						          														     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm)) - new Integer(Integer.parseInt(v2mm));
-						          													     	 values.add(_localctx.valueOfSymbol);
-						          													     	System.out.println("values-->" + values);
-						          													     }
-						          												     //}
+						          												     if ((((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS!=null?((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS.getText():null).equals("+")) {
+						          												     	System.out.println("Entrei em soma");
+						          												     	System.out.println("Operacao: " + (((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS!=null?((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS.getText():null));
+						          													     Integer v1mm = values.remove(values.size()-1);
+						          													     Integer v2mm = values.remove(values.size()-1);
+						          													     System.out.println("V1: " + v1mm + "V2: " + v2mm);
+						          													     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm)) + new Integer(Integer.parseInt(v2mm));
+						          													     
+						          													     values.add(_localctx.valueOfSymbol);
+						          													     System.out.println("values-->" + values);
+						          												     } else {
+						          												     	 System.out.println("Entrei em subtracao");
+						          												     	 System.out.println("Operacao: " + (((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS!=null?((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS.getText():null));
+						          													     Integer v1mm = values.remove(values.size()-1);
+						          													     Integer v2mm = values.remove(values.size()-1);
+						          													     System.out.println("V1: " + v1mm + "V2: " + v2mm);
+						          													     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm)) - new Integer(Integer.parseInt(v2mm));
+						          												     	 values.add(_localctx.valueOfSymbol);
+						          												     	System.out.println("values-->" + values);
+						          												     }
 						          													 
 						}
 						break;
