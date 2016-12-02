@@ -110,7 +110,6 @@ public class MMMLParser extends Parser {
 	NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>();
 	NestedSymbolTable<Object> symbolValueTable = new NestedSymbolTable<Object>();
 	ArrayList<Object> values = new ArrayList<Object>();
-	ArrayList<String> names = new ArrayList<String>();
 
 	public MMMLParser(TokenStream input) {
 		super(input);
@@ -1746,6 +1745,14 @@ public class MMMLParser extends Parser {
 		MetaexprContext _prevctx = _localctx;
 		int _startState = 34;
 		enterRecursionRule(_localctx, 34, RULE_metaexpr, _p);
+
+		    String v1c;
+		    String v2c;
+		    String v1dm;
+		    String v2dm;
+		    String v1mm;
+		    String v2mm;
+
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
@@ -1819,6 +1826,7 @@ public class MMMLParser extends Parser {
 																		if (symbolE == null) {
 																			System.out.println("Variavel desconhecida: " + (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));	
 																		}
+																		System.out.println("Lookup-> "+ (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
 				    												
 				}
 				break;
@@ -1903,13 +1911,14 @@ public class MMMLParser extends Parser {
 						          														erros++;
 						          														((Me_listconcat_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  if (values.size() >= 2) { 
-						          														 String v1c = (String) (values.remove(values.size()-1));
-						          													     String v2c = (String) (values.remove(values.size()-1));
-						          													     System.out.println("V1: " + v1c + "V2: " + v2c);
-						          													     values.add(String.valueOf(v1c) + String.valueOf(v2c));
+						          													  //if (values.size() >= 2) { 
+						          													  	System.out.println("Entrei em concatenacao");
+						          														 v1c = (String) (values.remove(values.size()-1));
+						          													     v2c = (String) (values.remove(values.size()-1));
+						          													     System.out.println("V1: " + v1c + " - V2: " + v2c);
+						          													     values.add(new String(v2c + v1c));
 						          													     System.out.println("values-->" + values);
-						          												     }
+						          												     //}
 						          													 
 						}
 						break;
@@ -1934,21 +1943,25 @@ public class MMMLParser extends Parser {
 						          													    erros++;
 						          													    ((Me_exprmuldiv_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  if (values.size() >= 2) { 
+						          													  //if (values.size() >= 2) { 
 						          													     if (TOK_DIV_OR_MUL == '/') {
-						          														     Integer v1dm = (Integer) (values.remove(values.size()-1));
-						          														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+						          													     	 System.out.println("Entrei em divisao");
+						          														     v1dm = (String) (values.remove(values.size()-1));
+						          														     v2dm = (String) (values.remove(values.size()-1));
 						          														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-						          														     values.add(new Integer (v1dm / v2dm));
+						          														     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm)) / new Integer(Integer.parseInt(v2dm));
+						          														     values.add(_localctx.valueOfSymbol);
 						          														     System.out.println("values-->" + values);
 						          													     } else {
-						          													     	 Integer v1dm = (Integer) (values.remove(values.size()-1));
-						          														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+						          													     	 System.out.println("Entrei em multiplicacao");
+						          													     	 v1dm = (String) (values.remove(values.size()-1));
+						          														     v2dm = (String) (values.remove(values.size()-1));
 						          														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-						          													     	 values.add(new Integer (v1dm * v2dm));
+						          														     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm)) * new Integer(Integer.parseInt(v2dm));
+						          													     	 values.add(_localctx.valueOfSymbol);
 						          													     	 System.out.println("values-->" + values);
 						          													     }
-						          												     }
+						          												    // }
 						          													 
 						}
 						break;
@@ -1973,21 +1986,25 @@ public class MMMLParser extends Parser {
 						          													    erros++;
 						          													    ((Me_exprplusminus_ruleContext)_localctx).eType =  null;
 						          													  }
-						          													  if (values.size() >=2) { 
+						          													  //if (values.size() >=2) { 
 						          													     if (TOK_PLUS_OR_MINUS == '+') {
-						          														     Integer v1mm = (Integer) (values.remove(values.size()-1));
-						          														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+						          													     	System.out.println("Entrei em soma");
+						          														     v1mm = (String) values.remove(values.size()-1);
+						          														     v2mm = (String) values.remove(values.size()-1);
 						          														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-						          														     values.add(new Integer (v1mm + v2mm));
+						          														     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm)) + new Integer(Integer.parseInt(v2mm));
+						          														     values.add(_localctx.valueOfSymbol);
 						          														     System.out.println("values-->" + values);
 						          													     } else {
-						          														     Integer v1mm = (Integer) (values.remove(values.size()-1));
-						          														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+						          													     	 System.out.println("Entrei em subtracao");
+						          														     v1mm = (String) (values.remove(values.size()-1));
+						          														     v2mm = (String) (values.remove(values.size()-1));
 						          														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-						          													     	values.add(new Integer (v1mm - v2mm));
+						          														     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm)) - new Integer(Integer.parseInt(v2mm));
+						          													     	 values.add(_localctx.valueOfSymbol);
 						          													     	System.out.println("values-->" + values);
 						          													     }
-						          												     }
+						          												     //}
 						          													 
 						}
 						break;

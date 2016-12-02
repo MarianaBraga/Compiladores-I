@@ -197,6 +197,14 @@ letvarexpr
 
 metaexpr
 returns [String eType, Object valueOfSymbol]
+@init {
+    String v1c;
+    String v2c;
+    String v1dm;
+    String v2dm;
+    String v1mm;
+    String v2mm;
+}
     : '(' o=funcbody ')'                             {$eType = $o.oType;}#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG symbol                                 {$eType = "boolean";}     #me_boolneg_rule        // Negate a variable
@@ -215,13 +223,14 @@ returns [String eType, Object valueOfSymbol]
 														erros++;
 														$eType = null;
 													  }
-													  if (values.size() >= 2) { 
-														 String v1c = (String) (values.remove(values.size()-1));
-													     String v2c = (String) (values.remove(values.size()-1));
-													     System.out.println("V1: " + v1c + "V2: " + v2c);
-													     values.add(String.valueOf(v1c) + String.valueOf(v2c));
+													  //if (values.size() >= 2) { 
+													  	System.out.println("Entrei em concatenacao");
+														 v1c = (String) (values.remove(values.size()-1));
+													     v2c = (String) (values.remove(values.size()-1));
+													     System.out.println("V1: " + v1c + " - V2: " + v2c);
+													     values.add(new String(v2c + v1c));
 													     System.out.println("values-->" + values);
-												     }
+												     //}
 													 }#me_listconcat_rule     // Sequence concatenation
 
     | l=metaexpr TOK_DIV_OR_MUL r=metaexpr           {if((!$l.eType.equals("string") && !$r.eType.equals("string")) && (!$l.eType.equals("boolean") && !$r.eType.equals("boolean"))){
@@ -234,21 +243,25 @@ returns [String eType, Object valueOfSymbol]
 													    erros++;
 													    $eType = null;
 													  }
-													  if (values.size() >= 2) { 
+													  //if (values.size() >= 2) { 
 													     if (TOK_DIV_OR_MUL == '/') {
-														     Integer v1dm = (Integer) (values.remove(values.size()-1));
-														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+													     	 System.out.println("Entrei em divisao");
+														     v1dm = (String) (values.remove(values.size()-1));
+														     v2dm = (String) (values.remove(values.size()-1));
 														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-														     values.add(new Integer (v1dm / v2dm));
+														     $valueOfSymbol = new Integer(Integer.parseInt(v1dm)) / new Integer(Integer.parseInt(v2dm));
+														     values.add($valueOfSymbol);
 														     System.out.println("values-->" + values);
 													     } else {
-													     	 Integer v1dm = (Integer) (values.remove(values.size()-1));
-														     Integer v2dm = (Integer) (values.remove(values.size()-1));
+													     	 System.out.println("Entrei em multiplicacao");
+													     	 v1dm = (String) (values.remove(values.size()-1));
+														     v2dm = (String) (values.remove(values.size()-1));
 														     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-													     	 values.add(new Integer (v1dm * v2dm));
+														     $valueOfSymbol = new Integer(Integer.parseInt(v1dm)) * new Integer(Integer.parseInt(v2dm));
+													     	 values.add($valueOfSymbol);
 													     	 System.out.println("values-->" + values);
 													     }
-												     }
+												    // }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 
     | l=metaexpr TOK_PLUS_OR_MINUS r=metaexpr        {if((!$l.eType.equals("string") && !$r.eType.equals("string")) && (!$l.eType.equals("boolean") && !$r.eType.equals("boolean"))){
@@ -261,21 +274,25 @@ returns [String eType, Object valueOfSymbol]
 													    erros++;
 													    $eType = null;
 													  }
-													  if (values.size() >=2) { 
+													  //if (values.size() >=2) { 
 													     if (TOK_PLUS_OR_MINUS == '+') {
-														     Integer v1mm = (Integer) (values.remove(values.size()-1));
-														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+													     	System.out.println("Entrei em soma");
+														     v1mm = (String) values.remove(values.size()-1);
+														     v2mm = (String) values.remove(values.size()-1);
 														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-														     values.add(new Integer (v1mm + v2mm));
+														     $valueOfSymbol = new Integer(Integer.parseInt(v1mm)) + new Integer(Integer.parseInt(v2mm));
+														     values.add($valueOfSymbol);
 														     System.out.println("values-->" + values);
 													     } else {
-														     Integer v1mm = (Integer) (values.remove(values.size()-1));
-														     Integer v2mm = (Integer) (values.remove(values.size()-1));
+													     	 System.out.println("Entrei em subtracao");
+														     v1mm = (String) (values.remove(values.size()-1));
+														     v2mm = (String) (values.remove(values.size()-1));
 														     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-													     	values.add(new Integer (v1mm - v2mm));
+														     $valueOfSymbol = new Integer(Integer.parseInt(v1mm)) - new Integer(Integer.parseInt(v2mm));
+													     	 values.add($valueOfSymbol);
 													     	System.out.println("values-->" + values);
 													     }
-												     }
+												     //}
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 
     | l=metaexpr TOK_CMP_GT_LT r=metaexpr            {$eType = "boolean";}#me_boolgtlt_rule       // < <= >= > are equal
@@ -291,6 +308,7 @@ returns [String eType, Object valueOfSymbol]
 														if (symbolE == null) {
 															System.out.println("Variavel desconhecida: " + $symbol.text);	
 														}
+														System.out.println("Lookup-> "+ $symbol.text);
     												}  #me_exprsymbol_rule     // a single symbol
     | y=literal                                      { $valueOfSymbol = $y.valueOfSymbol;
     													values.add($valueOfSymbol);
