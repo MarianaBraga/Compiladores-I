@@ -1828,7 +1828,7 @@ public class MMMLParser extends Parser {
 				    													System.out.println("1-entrei em symbol");
 				    													SymbolEntry<Object> symbolE = symbolValueTable.lookup((((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
 																		if (symbolE != null) {
-																			values.add(symbolE.symbol);
+																			values.add(symbol.value);
 																			System.out.println("Pilha -> " + values);
 																		} else {
 																			System.out.println("Variavel desconhecida: " + (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));	

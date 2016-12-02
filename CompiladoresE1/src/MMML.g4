@@ -28,7 +28,6 @@ NestedSymbolTable<String> symbolTable = new NestedSymbolTable<String>();
 NestedSymbolTable<Object> symbolValueTable = new NestedSymbolTable<Object>();
 ArrayList<Object> values = new ArrayList<Object>();
 ArrayList<String> names = new ArrayList<String>();
-class simboloDaTabela { String nome; Object valor; }
 }
 
 WS : [ \r\t\u000C\n]+ -> channel(HIDDEN)
@@ -136,7 +135,7 @@ funcbody
 returns [String oType]:
         ifexpr                                       #fbody_if_rule
     |   let = letexpr                                      {$oType = $let.letexprType;} #fbody_let_rule
-    |   m=metaexpr                                   {$oType = $m.eType; simboloDaTabela.value = s }#fbody_expr_rule
+    |   m=metaexpr                                   {$oType = $m.eType;}#fbody_expr_rule
     ;
 
 ifexpr
@@ -208,7 +207,7 @@ letvarexpr
     ;
 
 metaexpr
-returns [String eType, Object simboloDaTabela1]
+returns [String eType]
     : '(' o=funcbody ')'                             {$eType = $o.oType;}#me_exprparens_rule     // Anything in parenthesis -- if, let, funcion call, etc
     | sequence_expr                                  #me_list_create_rule    // creates a list [x]
     | TOK_NEG symbol                                 {$eType = "boolean";}     #me_boolneg_rule        // Negate a variable
@@ -230,8 +229,7 @@ returns [String eType, Object simboloDaTabela1]
 													  if (values.size() != 0) { 
 														 Integer v1c = (Integer)( values.remove(values.size()-1) );
 													     Integer v2c = (Integer)( values.remove(values.size()-1) );
-													     simboloDaTabela = new String(v1c + v2c);
-													     values.add(simboloDaTabela);
+													     values.add(new Integer(v1c.intValue() + v2c.intValue()));
 												     }
 													 }#me_listconcat_rule     // Sequence concatenation
 
@@ -248,9 +246,7 @@ returns [String eType, Object simboloDaTabela1]
 													  if (values.size() != 0) { 
 														 Integer v1dm = (Integer)( values.remove(values.size()-1) );
 													     Integer v2dm = (Integer)( values.remove(values.size()-1) );
-													     $simboloDaTabela1 = new Integer(v1dm.intValue() + v2dm.intValue());
-													     values.add($simboloDaTabela1);
-												     }
+													     values.add(new Integer(v1dm.intValue() + v2dm.intValue()));
 												     }
 													 }#me_exprmuldiv_rule     // Div and Mult are equal
 
@@ -267,9 +263,7 @@ returns [String eType, Object simboloDaTabela1]
 													  if (values.size() != 0) { 
 														 Integer v1mm = (Integer)( values.remove(values.size()-1) );
 													     Integer v2mm = (Integer)( values.remove(values.size()-1) );
-													     $simboloDaTabela1 = new Integer(v1mm.intValue() + v2mm.intValue());
-													     values.add($simboloDaTabela1);
-												     }
+													     values.add(new Integer(v1mm.intValue() + v2mm.intValue()));
 												     }
 													 }#me_exprplusminus_rule  // Sum and Sub are equal
 
@@ -279,12 +273,12 @@ returns [String eType, Object simboloDaTabela1]
 
     | l=metaexpr TOK_BOOL_AND_OR r=metaexpr         {$eType = "boolean";}#me_boolandor_rule      // &&   and  ||  are equal
 
-    | u=symbol                                      {   $simboloDaTabela1.nome = $u.text; $simboloDaTabela1.valor = $u.value;
+    | u=symbol                                      {
     													$eType = $u.sType;
     													System.out.println("1-entrei em symbol");
     													SymbolEntry<Object> symbolE = symbolValueTable.lookup($symbol.text);
 														if (symbolE != null) {
-															values.add($simboloDaTabela1);
+															values.add(symbolE.symbol);
 															System.out.println("Pilha -> " + values);
 														} else {
 															System.out.println("Variavel desconhecida: " + $symbol.text);	
