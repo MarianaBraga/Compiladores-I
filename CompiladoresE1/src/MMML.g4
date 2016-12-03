@@ -169,7 +169,7 @@ letvarexpr
 	         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); 
 	         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
 	         													symbolValueTable.store($s.text, obj1); 
-	         													values.add(obj1); System.out.println("values-->" + values); }
+	         													System.out.println("values-->" + values); }
 	         													System.out.print("simbolo "+$s.text+" armazenado na tabela atual");
 	         													if($f.oType==null){
 	         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -178,7 +178,7 @@ letvarexpr
     															symbolTable.store("_",$f.oType);
     															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); 
     															symbolValueTable.store("_", obj2);
-    															values.add(obj2); System.out.println("values-->" + values);  }
+    															System.out.println("values-->" + values);  }
     															System.out.print("simbolo _ armazenado na tabela atual");
     															if($f.oType==null){
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -188,7 +188,7 @@ letvarexpr
     															symbolTable.store($l.text+$r.text,$s.oType);
     															if (values.size() != 0){ Object obj3 = values.remove(0); 
     															symbolValueTable.store($l.text+$r.text, obj3);
-    															values.add(obj3);  System.out.println("values-->" + values);  }
+    															System.out.println("values-->" + values);  }
     															System.out.print("simbolo "+$l.text+$r.text+" armazenado na tabela atual");
     															if($s.oType==null){	
     																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -239,7 +239,7 @@ returns [String eType, Object valueOfSymbol]
 													     String v1dm = (String) (values.remove(values.size()-1));
 													     String v2dm = (String) (values.remove(values.size()-1));
 													     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-													     $valueOfSymbol = new Integer(Integer.parseInt(v1dm)) / new Integer(Integer.parseInt(v2dm));
+													     $valueOfSymbol = new Integer(Integer.parseInt(v1dm) / Integer.parseInt(v2dm)).toString();
 													     values.add($valueOfSymbol);
 													     System.out.println("values-->" + values);
 												     } else {
@@ -248,7 +248,7 @@ returns [String eType, Object valueOfSymbol]
 												     	 String v1dm = (String) (values.remove(values.size()-1));
 													     String v2dm = (String) (values.remove(values.size()-1));
 													     System.out.println("V1: " + v1dm + "V2: " + v2dm);
-													     $valueOfSymbol = new Integer(Integer.parseInt(v1dm)) * new Integer(Integer.parseInt(v2dm));
+													     $valueOfSymbol = new Integer(Integer.parseInt(v1dm) * Integer.parseInt(v2dm)).toString();
 												     	 values.add($valueOfSymbol);
 												     	 System.out.println("values-->" + values);
 												     }
@@ -270,7 +270,7 @@ returns [String eType, Object valueOfSymbol]
 													     String v1mm = (String) (values.remove(values.size()-1));
 													     String v2mm = (String) (values.remove(values.size()-1));
 													     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-													     $valueOfSymbol = new Integer(Integer.parseInt(v1mm)) + new Integer(Integer.parseInt(v2mm));
+													     $valueOfSymbol = new Integer(Integer.parseInt(v1mm) + Integer.parseInt(v2mm)).toString();
 													     
 													     values.add($valueOfSymbol);
 													     System.out.println("values-->" + values);
@@ -280,7 +280,7 @@ returns [String eType, Object valueOfSymbol]
 													     String v1mm = (String) (values.remove(values.size()-1));
 													     String v2mm = (String) (values.remove(values.size()-1));
 													     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-													     $valueOfSymbol = new Integer(Integer.parseInt(v1mm)) - new Integer(Integer.parseInt(v2mm));
+													     $valueOfSymbol = new Integer(Integer.parseInt(v1mm) - Integer.parseInt(v2mm)).toString();
 												     	 values.add($valueOfSymbol);
 												     	System.out.println("values-->" + values);
 												     }
@@ -296,6 +296,7 @@ returns [String eType, Object valueOfSymbol]
     													$eType = $u.sType;
     													System.out.println("1-entrei em symbol");
     													SymbolEntry<Object> symbolE = symbolValueTable.lookup($symbol.text);
+    													values.add(symbolE.symbol);
 														if (symbolE == null) {
 															System.out.println("Variavel desconhecida: " + $symbol.text);	
 														}
