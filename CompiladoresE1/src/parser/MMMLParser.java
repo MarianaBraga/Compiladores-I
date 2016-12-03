@@ -913,6 +913,7 @@ public class MMMLParser extends Parser {
 
 	public static class FuncbodyContext extends ParserRuleContext {
 		public String oType;
+		public Object valueOfSymbol;
 		public FuncbodyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -922,6 +923,7 @@ public class MMMLParser extends Parser {
 		public void copyFrom(FuncbodyContext ctx) {
 			super.copyFrom(ctx);
 			this.oType = ctx.oType;
+			this.valueOfSymbol = ctx.valueOfSymbol;
 		}
 	}
 	public static class Fbody_let_ruleContext extends FuncbodyContext {
@@ -1013,7 +1015,14 @@ public class MMMLParser extends Parser {
 				{
 				setState(134);
 				((Fbody_expr_ruleContext)_localctx).m = metaexpr(0);
-				((Fbody_expr_ruleContext)_localctx).oType =  ((Fbody_expr_ruleContext)_localctx).m.eType;
+				((Fbody_expr_ruleContext)_localctx).oType =  ((Fbody_expr_ruleContext)_localctx).m.eType; 
+				    												  ((Fbody_expr_ruleContext)_localctx).valueOfSymbol =  ((Fbody_expr_ruleContext)_localctx).m.valueOfSymbol;
+				    												  if (((Fbody_expr_ruleContext)_localctx).m.valuesType == "string") {
+				    												  	System.out.println("values-->" + "[\"" + values.get(0) + "\"]");
+				    												  } else {
+				    												  	System.out.println("values-->" + values);
+				    												  }
+				    												 
 				}
 				break;
 			default:
@@ -1385,13 +1394,13 @@ public class MMMLParser extends Parser {
 				match(T__2);
 				setState(165);
 				((Letvarattr_ruleContext)_localctx).f = funcbody();
-				  ((Letvarattr_ruleContext)_localctx).name1 =  (((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null); System.out.println("values-->" + values); ((Letvarattr_ruleContext)_localctx).letType =  ((Letvarattr_ruleContext)_localctx).f.oType;
+				  ((Letvarattr_ruleContext)_localctx).name1 =  (((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null); ((Letvarattr_ruleContext)_localctx).letType =  ((Letvarattr_ruleContext)_localctx).f.oType;
 					         												if ((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null) != ""){
 					         													symbolTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null),((Letvarattr_ruleContext)_localctx).f.oType); System.out.println("Adicionou na tabela de tipos");
 					         													if (values.size() != 0){ Object obj1 = values.remove(values.size()-1); 
-					         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
-					         													symbolValueTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null), obj1); 
-					         													System.out.println("values-->" + values); }
+						         													System.out.println("removeu da pilha, adicionou na tabela de valores"); 
+						         													symbolValueTable.store((((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null), obj1); 
+					         													}
 					         													System.out.print("simbolo "+(((Letvarattr_ruleContext)_localctx).s!=null?_input.getText(((Letvarattr_ruleContext)_localctx).s.start,((Letvarattr_ruleContext)_localctx).s.stop):null)+" armazenado na tabela atual");
 					         													if(((Letvarattr_ruleContext)_localctx).f.oType==null){
 					         														System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1408,11 +1417,11 @@ public class MMMLParser extends Parser {
 				match(T__2);
 				setState(170);
 				((Letvarresult_ignore_ruleContext)_localctx).f = funcbody();
-				  ((Letvarresult_ignore_ruleContext)_localctx).name1 =  "_";	System.out.println("values-->" + values); ((Letvarresult_ignore_ruleContext)_localctx).letType =  ((Letvarresult_ignore_ruleContext)_localctx).f.oType;
+				  ((Letvarresult_ignore_ruleContext)_localctx).name1 =  "_";  ((Letvarresult_ignore_ruleContext)_localctx).letType =  ((Letvarresult_ignore_ruleContext)_localctx).f.oType;
 				    															symbolTable.store("_",((Letvarresult_ignore_ruleContext)_localctx).f.oType);
 				    															if (values.size() != 0){ Object obj2 = values.remove(values.size()-1); 
-				    															symbolValueTable.store("_", obj2);
-				    															System.out.println("values-->" + values);  }
+				    																symbolValueTable.store("_", obj2);
+				    														 	}
 				    															System.out.print("simbolo _ armazenado na tabela atual");
 				    															if(((Letvarresult_ignore_ruleContext)_localctx).f.oType==null){
 				    																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1433,12 +1442,12 @@ public class MMMLParser extends Parser {
 				match(T__2);
 				setState(177);
 				((Letunpack_ruleContext)_localctx).s = funcbody();
-				  ((Letunpack_ruleContext)_localctx).name1 =  (((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null) + (((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null);  System.out.println("values-->" + values);	((Letunpack_ruleContext)_localctx).letType =  ((Letunpack_ruleContext)_localctx).s.oType;
+				  ((Letunpack_ruleContext)_localctx).name1 =  (((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null) + (((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null); 	((Letunpack_ruleContext)_localctx).letType =  ((Letunpack_ruleContext)_localctx).s.oType;
 				    														if ((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null) != "" && (((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null) != ""){
 				    															symbolTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null),((Letunpack_ruleContext)_localctx).s.oType);
 				    															if (values.size() != 0){ Object obj3 = values.remove(0); 
-				    															symbolValueTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null), obj3);
-				    															System.out.println("values-->" + values);  }
+				    																symbolValueTable.store((((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null), obj3);
+				    															}
 				    															System.out.print("simbolo "+(((Letunpack_ruleContext)_localctx).l!=null?_input.getText(((Letunpack_ruleContext)_localctx).l.start,((Letunpack_ruleContext)_localctx).l.stop):null)+(((Letunpack_ruleContext)_localctx).r!=null?_input.getText(((Letunpack_ruleContext)_localctx).r.start,((Letunpack_ruleContext)_localctx).r.stop):null)+" armazenado na tabela atual");
 				    															if(((Letunpack_ruleContext)_localctx).s.oType==null){	
 				    																System.out.println(" - porem o tipo do simbolo nao foi reconhecido(expressao let como valor para o simbolo?), o que ira causar uma exception em caso de pesquisa por este simbolo");
@@ -1461,6 +1470,7 @@ public class MMMLParser extends Parser {
 	public static class MetaexprContext extends ParserRuleContext {
 		public String eType;
 		public Object valueOfSymbol;
+		public String valuesType;
 		public MetaexprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1471,6 +1481,7 @@ public class MMMLParser extends Parser {
 			super.copyFrom(ctx);
 			this.eType = ctx.eType;
 			this.valueOfSymbol = ctx.valueOfSymbol;
+			this.valuesType = ctx.valuesType;
 		}
 	}
 	public static class Me_exprplusminus_ruleContext extends MetaexprContext {
@@ -1815,13 +1826,17 @@ public class MMMLParser extends Parser {
 				((Me_exprsymbol_ruleContext)_localctx).u = ((Me_exprsymbol_ruleContext)_localctx).symbol = symbol();
 
 				    													((Me_exprsymbol_ruleContext)_localctx).eType =  ((Me_exprsymbol_ruleContext)_localctx).u.sType;
-				    													System.out.println("1-entrei em symbol");
-				    													SymbolEntry<Object> symbolE = symbolValueTable.lookup((((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
-				    													values.add(symbolE.symbol);
-																		if (symbolE == null) {
-																			System.out.println("Variavel desconhecida: " + (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));	
+				    													try {
+					    													SymbolEntry<Object> symbolE = symbolValueTable.lookup((((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
+					    													values.add(symbolE.symbol);
+																			if (symbolE == null) {
+																				System.out.println("Variavel desconhecida: " + (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));	
+																			}
+																			System.out.println("Lookup-> "+ (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
+																		} catch (Exception e) {
+																			System.out.println("Variavel desconhecida: " + (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null) + " --- " + e);
+																			throw e;
 																		}
-																		System.out.println("Lookup-> "+ (((Me_exprsymbol_ruleContext)_localctx).symbol!=null?_input.getText(((Me_exprsymbol_ruleContext)_localctx).symbol.start,((Me_exprsymbol_ruleContext)_localctx).symbol.stop):null));
 				    												
 				}
 				break;
@@ -1853,7 +1868,7 @@ public class MMMLParser extends Parser {
 				_prevctx = _localctx;
 				setState(206);
 				((Me_exprcast_ruleContext)_localctx).t = cast();
-				((Me_exprcast_ruleContext)_localctx).eType =  ((Me_exprcast_ruleContext)_localctx).t.cType;
+				((Me_exprcast_ruleContext)_localctx).eType =  ((Me_exprcast_ruleContext)_localctx).t.cType; ((Me_exprcast_ruleContext)_localctx).valueOfSymbol =  ((Me_exprcast_ruleContext)_localctx).t.valueOfSymbol;   
 				}
 				break;
 			}
@@ -1906,12 +1921,10 @@ public class MMMLParser extends Parser {
 						          														erros++;
 						          														((Me_listconcat_ruleContext)_localctx).eType =  null;
 						          													  }
-						          												  	 System.out.println("Entrei em concatenacao");
+						          												  	 ((Me_listconcat_ruleContext)_localctx).valuesType =  "string";
 						          													 String v1c = (String) (values.remove(values.size()-1));
 						          												     String v2c = (String) (values.remove(values.size()-1));
-						          												     System.out.println("V1: " + v1c + " - V2: " + v2c);
-						          												     values.add(new String(v2c + v1c));
-						          												     System.out.println("values-->" + values);
+						          												     values.add(v2c.replace("\"", "") + v1c.replace("\"", ""));
 						          													 
 						}
 						break;
@@ -1937,23 +1950,17 @@ public class MMMLParser extends Parser {
 						          													    ((Me_exprmuldiv_ruleContext)_localctx).eType =  null;
 						          													  }
 						          												     if ((((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL!=null?((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL.getText():null).equals("/")) {
-						          												     	 System.out.println("Entrei em divisao");
-						          												     	 System.out.println("Operacao: " + (((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL!=null?((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL.getText():null));
+						          												     	 ((Me_exprmuldiv_ruleContext)_localctx).valuesType =  "integer";
 						          													     String v1dm = (String) (values.remove(values.size()-1));
 						          													     String v2dm = (String) (values.remove(values.size()-1));
-						          													     System.out.println("V1: " + v1dm + "V2: " + v2dm);
 						          													     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm) / Integer.parseInt(v2dm)).toString();
 						          													     values.add(_localctx.valueOfSymbol);
-						          													     System.out.println("values-->" + values);
 						          												     } else {
-						          												     	 System.out.println("Entrei em multiplicacao");
-						          												     	 System.out.println("Operacao: " + (((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL!=null?((Me_exprmuldiv_ruleContext)_localctx).TOK_DIV_OR_MUL.getText():null));
+						          												     	 ((Me_exprmuldiv_ruleContext)_localctx).valuesType =  "integer";
 						          												     	 String v1dm = (String) (values.remove(values.size()-1));
 						          													     String v2dm = (String) (values.remove(values.size()-1));
-						          													     System.out.println("V1: " + v1dm + "V2: " + v2dm);
 						          													     ((Me_exprmuldiv_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1dm) * Integer.parseInt(v2dm)).toString();
 						          												     	 values.add(_localctx.valueOfSymbol);
-						          												     	 System.out.println("values-->" + values);
 						          												     }
 						          													 
 						}
@@ -1980,24 +1987,17 @@ public class MMMLParser extends Parser {
 						          													    ((Me_exprplusminus_ruleContext)_localctx).eType =  null;
 						          													  }
 						          												     if ((((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS!=null?((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS.getText():null).equals("+")) {
-						          												     	System.out.println("Entrei em soma");
-						          												     	System.out.println("Operacao: " + (((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS!=null?((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS.getText():null));
+						          												     	((Me_exprplusminus_ruleContext)_localctx).valuesType =  "integer";
 						          													     String v1mm = (String) (values.remove(values.size()-1));
 						          													     String v2mm = (String) (values.remove(values.size()-1));
-						          													     System.out.println("V1: " + v1mm + "V2: " + v2mm);
 						          													     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm) + Integer.parseInt(v2mm)).toString();
-						          													     
 						          													     values.add(_localctx.valueOfSymbol);
-						          													     System.out.println("values-->" + values);
 						          												     } else {
-						          												     	 System.out.println("Entrei em subtracao");
-						          												     	 System.out.println("Operacao: " + (((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS!=null?((Me_exprplusminus_ruleContext)_localctx).TOK_PLUS_OR_MINUS.getText():null));
+						          												     	 ((Me_exprplusminus_ruleContext)_localctx).valuesType =  "integer";
 						          													     String v1mm = (String) (values.remove(values.size()-1));
 						          													     String v2mm = (String) (values.remove(values.size()-1));
-						          													     System.out.println("V1: " + v1mm + "V2: " + v2mm);
-						          													     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v1mm) - Integer.parseInt(v2mm)).toString();
+						          													     ((Me_exprplusminus_ruleContext)_localctx).valueOfSymbol =  new Integer(Integer.parseInt(v2mm) - Integer.parseInt(v1mm)).toString();
 						          												     	 values.add(_localctx.valueOfSymbol);
-						          												     	System.out.println("values-->" + values);
 						          												     }
 						          													 
 						}
@@ -2171,6 +2171,7 @@ public class MMMLParser extends Parser {
 
 	public static class CastContext extends ParserRuleContext {
 		public String cType;
+		public Object valueOfSymbol;
 		public CastContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2180,10 +2181,12 @@ public class MMMLParser extends Parser {
 		public void copyFrom(CastContext ctx) {
 			super.copyFrom(ctx);
 			this.cType = ctx.cType;
+			this.valueOfSymbol = ctx.valueOfSymbol;
 		}
 	}
 	public static class Cast_ruleContext extends CastContext {
 		public TypeContext t;
+		public FuncbodyContext funcbody;
 		public FuncbodyContext funcbody() {
 			return getRuleContext(FuncbodyContext.class,0);
 		}
@@ -2211,8 +2214,10 @@ public class MMMLParser extends Parser {
 			setState(258);
 			((Cast_ruleContext)_localctx).t = type();
 			setState(259);
-			funcbody();
+			((Cast_ruleContext)_localctx).funcbody = funcbody();
 			((Cast_ruleContext)_localctx).cType =  ((Cast_ruleContext)_localctx).t.tType;
+			    													((Cast_ruleContext)_localctx).valueOfSymbol =  ((Cast_ruleContext)_localctx).funcbody.valueOfSymbol;
+			    													
 			}
 		}
 		catch (RecognitionException re) {
